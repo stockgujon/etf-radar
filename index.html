@@ -166,7 +166,18 @@ tbody tr:hover { background:#fff7e6; }
      即時抓取的 /api/etfs，不需要改這個檔案。
   ------------------------------------------------------------------ */
   var search = new URLSearchParams(location.search);
-  var ENDPOINTS = search.getAll('api').concat(['data.json', '/api/etfs']);
+  var ENDPOINTS = search.getAll('api');
+
+  /* GitHub Pages 不一定會為「機器人自動提交」重新建置網站，所以同網域的
+     data.json 可能讀不到、或停在舊版。在 github.io 上改成優先直接讀倉庫裡的
+     data.json（GitHub 有開放跨網域讀取，端點快取約 5 分鐘），這樣一定是最新的。 */
+  var ghUser = location.hostname.match(/^([^.]+)\.github\.io$/);
+  if (ghUser) {
+    var repo = location.pathname.split('/').filter(Boolean)[0] || (ghUser[1] + '.github.io');
+    ENDPOINTS.push('https://raw.githubusercontent.com/' + ghUser[1] + '/' + repo + '/main/data.json');
+  }
+  ENDPOINTS.push('data.json');
+  ENDPOINTS.push('/api/etfs');
   var lastLoadedAt = 0;
 
   var money = new Intl.NumberFormat('zh-TW', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
