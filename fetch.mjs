@@ -1,0 +1,274 @@
+/**
+ * scripts/fetch.mjs
+ *
+ * 由 GitHub Actions 執行：去證交所抓最新的高股息 ETF 資料，寫進 data.json。
+ * 這支程式在 GitHub 的伺服器上跑，不是在你的瀏覽器裡跑，所以不會被 CORS 擋住。
+ *
+ * 本機想手動測試：node scripts/fetch.mjs
+ */
+
+import { writeFile } from 'node:fs/promises';
+
+const TWSE = 'https://wwwc.twse.com.tw';
+const HIGH_DIVIDEND_TAG = 'ff808081899b8efc0189aa050440001c';
+const HIGH_DIVIDEND_LOW_VOL_TAG = 'ff808081899b8efc0189aa05af5c001d';
+const FREQUENCY_OVERRIDES = {
+  '00405A': { label: '季配', times: 4, basis: '證交所新上市商品簡介' },
+  '00999A': { label: '季配', times: 4, basis: '官方公開說明書' },
+};
+const TITLE_CONFIRMED_EQUALIZATION = new Set(['00405A', '00999A']);
+
+function cleanText(value) {
+  return String(value == null ? '' : value)
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/&nbsp;|&#160;/g, ' ')
+    .replace(/&amp;/g, '&')
+    .replace(/&quot;|&#34;/g, '"')
+    .replace(/&#39;|&apos;/g, "'")
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function rocDateToIso(value) {
+  const match = cleanText(value).match(/(\d{2,3})年(\d{1,2})月(\d{1,2})日/);
+  if (!match) return null;
+  return `${Number(match[1]) + 1911}-${match[2].padStart(2, '0')}-${match[3].padStart(2, '0')}`;
+}
+
+async function fetchProducts(tag) {
+  const params = new URLSearchParams();
+  params.append('rangeTotalAv', '0');
+  params.append('rangeTotalAv', '99999');
+  params.append('rangeValueYTD', '0');
+  params.append('rangeValueYTD', '99999');
+  params.append('rangeClose1', '0');
+  params.append('rangeClose1', '9999');
+  params.append('assetType', 'Stock');
+  params.append('rewardType', 'Vanilla');
+  params.append('hashtag', tag);
+  params.append('sort', 'stockNo');
+  params.append('orderBy', 'ASC');
+
+  const response = await fetch(`${TWSE}/zh/ETFortune-institute/ajaxProducts`, {
+    method: 'POST',
+    headers: { 'content-type': 'application/x-www-form-urlencoded; charset=UTF-8' },
+    body: params,
+  });
+  if (!response.ok) throw new Error(`商品清單來源回應 ${response.status}`);
+  const payload = await response.json();
+  if (payload.status !== 'success') throw new Error('商品清單來源未回傳成功狀態');
+  return payload.data;
+}
+
+async function fetchDomesticEtfCodes(path) {
+  const response = await fetch(`https://www.twse.com.tw/rwd/zh/ETF/${path}?response=json`);
+  if (!response.ok) throw new Error(`國內 ETF 分類來源回應 ${response.status}`);
+  const payload = await response.json();
+  if (payload.status !== 'ok') throw new Error('國內 ETF 分類來源未回傳成功狀態');
+  return payload.data.filter((row) => row[3] === 'domestic').map((row) => row[0]);
+}
+
+function parseDividendRows(html) {
+  const rows = [];
+  const rowPattern = /<tr onclick="document\.location = '\/zh\/ETFortune-institute\/etfInfo\/([^']+)';">([\s\S]*?)<\/tr>/g;
+  for (const row of html.matchAll(rowPattern)) {
+    const cells = [...row[2].matchAll(/<td[^>]*>([\s\S]*?)<\/td>/g)].map((cell) => cell[1]);
+    if (cells.length < 6) continue;
+    const amountText = cleanText(cells[5]).replace(/,/g, '');
+    const descMatch = row[2].match(/data-desc="([\s\S]*?)">詳細資料<\/a>/);
+    rows.push({
+      code: row[1],
+      exDate: rocDateToIso(cells[2]),
+      recordDate: rocDateToIso(cells[3]),
+      paymentDate: rocDateToIso(cells[4]),
+      amount: amountText && Number.isFinite(Number(amountText)) ? Number(amountText) : null,
+      description: cleanText(descMatch ? descMatch[1] : ''),
+    });
+  }
+  return rows;
+}
+
+function median(values) {
+  if (!values.length) return null;
+  const sorted = [...values].sort((a, b) => a - b);
+  const middle = Math.floor(sorted.length / 2);
+  return sorted.length % 2 ? sorted[middle] : (sorted[middle - 1] + sorted[middle]) / 2;
+}
+
+function inferFrequency(records, description) {
+  const normalized = String(description || '').replace(/\s/g, '');
+  if (/一月.*三月.*五月.*七月.*九月.*十一月/.test(normalized) || /每二個月|每兩個月|雙月/.test(normalized)) {
+    return { label: '雙月配', times: 6, basis: '官方收益分配條款' };
+  }
+  if (/按月|每月/.test(normalized)) return { label: '月配', times: 12, basis: '官方收益分配條款' };
+  if (/按季|每季|每三個月/.test(normalized)) return { label: '季配', times: 4, basis: '官方收益分配條款' };
+  if (/每半年|半年/.test(normalized)) return { label: '半年配', times: 2, basis: '官方收益分配條款' };
+  if (!records.some((item) => item.exDate && item.amount !== null)) {
+    return { label: '待公布', times: 0, basis: '尚無官方配息紀錄' };
+  }
+
+  const dates = records
+    .filter((item) => item.exDate && item.amount !== null)
+    .map((item) => new Date(`${item.exDate}T00:00:00Z`).getTime())
+    .sort((a, b) => b - a)
+    .slice(0, 5);
+  const gaps = dates.slice(0, -1).map((date, index) => Math.abs(date - dates[index + 1]) / 86400000);
+  const gap = median(gaps);
+  if (gap !== null && gap <= 45) return { label: '月配', times: 12, basis: '近次實際配息間隔' };
+  if (gap !== null && gap <= 75) return { label: '雙月配', times: 6, basis: '近次實際配息間隔' };
+  if (gap !== null && gap <= 125) return { label: '季配', times: 4, basis: '近次實際配息間隔' };
+  if (gap !== null && gap <= 220) return { label: '半年配', times: 2, basis: '近次實際配息間隔' };
+  return { label: '年配', times: 1, basis: '近次實際配息間隔' };
+}
+
+function taipeiToday() {
+  const parts = new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'Asia/Taipei', year: 'numeric', month: '2-digit', day: '2-digit',
+  }).formatToParts(new Date());
+  const get = (type) => (parts.find((part) => part.type === type) || {}).value || '';
+  return `${get('year')}-${get('month')}-${get('day')}`;
+}
+
+function rocCompactDateToIso(value) {
+  if (!/^\d{7}$/.test(value)) return null;
+  return `${Number(value.slice(0, 3)) + 1911}-${value.slice(3, 5)}-${value.slice(5, 7)}`;
+}
+
+function taipeiDateDaysAgo(daysAgo) {
+  const [year, month, day] = taipeiToday().split('-').map(Number);
+  return new Date(Date.UTC(year, month - 1, day - daysAgo)).toISOString().slice(0, 10);
+}
+
+async function fetchLatestDailyCloses() {
+  for (let daysAgo = 0; daysAgo < 10; daysAgo += 1) {
+    const date = taipeiDateDaysAgo(daysAgo);
+    const compactDate = date.replace(/-/g, '');
+    let payload;
+    try {
+      const response = await fetch(
+        `https://www.twse.com.tw/rwd/zh/afterTrading/MI_INDEX?date=${compactDate}&type=ALLBUT0999&response=json`,
+        { cf: { cacheTtl: 0 } },
+      );
+      if (!response.ok) continue;
+      payload = await response.json();
+    } catch (ignored) {
+      continue;
+    }
+    if (!payload || payload.stat !== 'OK') continue;
+    const table = (payload.tables || []).find(
+      (item) => item.fields && item.fields.includes('證券代號') && item.fields.includes('收盤價'),
+    );
+    if (!table) continue;
+    const codeIndex = table.fields.indexOf('證券代號');
+    const closingPriceIndex = table.fields.indexOf('收盤價');
+    const rows = table.data
+      .map((row) => ({ date, code: cleanText(row[codeIndex]), closingPrice: cleanText(row[closingPriceIndex]) }))
+      .filter((row) => row.code && row.closingPrice && row.closingPrice !== '--');
+    if (rows.length) return rows;
+  }
+
+  const response = await fetch('https://openapi.twse.com.tw/v1/exchangeReport/STOCK_DAY_ALL');
+  if (!response.ok) throw new Error(`備援收盤行情來源回應 ${response.status}`);
+  const rows = await response.json();
+  return rows.flatMap((row) => {
+    const date = rocCompactDateToIso(row.Date);
+    return date ? [{ date, code: row.Code, closingPrice: row.ClosingPrice }] : [];
+  });
+}
+
+function rowDate(record) {
+  return record.exDate || '9999-12-31';
+}
+
+async function buildPayload() {
+  const [highDividend, highLowVol, domesticPassive, domesticActive, dividendHtml, dailyCloses] = await Promise.all([
+    fetchProducts(HIGH_DIVIDEND_TAG),
+    fetchProducts(HIGH_DIVIDEND_LOW_VOL_TAG),
+    fetchDomesticEtfCodes('domestic'),
+    fetchDomesticEtfCodes('activeList'),
+    fetch(`${TWSE}/zh/ETFortune-institute/dividendList`).then((response) => {
+      if (!response.ok) throw new Error(`配息來源回應 ${response.status}`);
+      return response.text();
+    }),
+    fetchLatestDailyCloses(),
+  ]);
+
+  const domesticCodes = new Set([...domesticPassive, ...domesticActive]);
+  const productsByCode = new Map(
+    [...highDividend, ...highLowVol]
+      .filter((item) => domesticCodes.has(item.stockNo))
+      .map((item) => [item.stockNo, item]),
+  );
+  const closesByCode = new Map(dailyCloses.map((row) => [row.code, row]));
+  const trackedCodes = [...productsByCode.keys()]
+    .filter((code) => closesByCode.has(code))
+    .sort((a, b) => a.localeCompare(b));
+  if (!trackedCodes.length) throw new Error('官方分類暫時沒有可用的國內高息 ETF 商品');
+
+  const trackedCodeSet = new Set(trackedCodes);
+  const dividendRows = parseDividendRows(dividendHtml).filter((row) => trackedCodeSet.has(row.code));
+  const today = taipeiToday();
+
+  const etfs = trackedCodes.map((code) => {
+    const product = productsByCode.get(code);
+    const dailyClose = closesByCode.get(code);
+    const price = Number(String(dailyClose.closingPrice).replace(/,/g, ''));
+    if (!Number.isFinite(price)) throw new Error(`收盤行情格式異常：${code}`);
+
+    const records = dividendRows
+      .filter((row) => row.code === code && row.exDate)
+      .sort((a, b) => (b.exDate || '').localeCompare(a.exDate || ''));
+    const nextDividend = [...records]
+      .filter((row) => row.exDate > today && row.amount !== null)
+      .sort((a, b) => rowDate(a).localeCompare(rowDate(b)))[0] || null;
+    const latestDividend = records.find((row) => row.exDate <= today && row.amount !== null) || null;
+    const description = (records.find((row) => row.description) || {}).description || '';
+    const frequency = FREQUENCY_OVERRIDES[code] || inferFrequency(records, description);
+    const yieldDividend = nextDividend || latestDividend;
+    const annualizedYield = yieldDividend && yieldDividend.amount != null && price > 0
+      ? (yieldDividend.amount * frequency.times / price) * 100
+      : null;
+
+    return {
+      code,
+      name: String(product.stockName).replace(/\(原簡稱:[^)]+\)/, '').trim(),
+      issuer: product.issuer,
+      price,
+      closeDate: dailyClose.date,
+      latestDividend: latestDividend ? { amount: latestDividend.amount, exDate: latestDividend.exDate } : null,
+      nextDividend: nextDividend ? { amount: nextDividend.amount, exDate: nextDividend.exDate } : null,
+      frequency: frequency.label,
+      frequencyBasis: frequency.basis,
+      paymentsPerYear: frequency.times,
+      annualizedYield,
+      yieldBasis: nextDividend ? '下次已公告配息' : latestDividend ? '最近一次配息' : null,
+      aumBillionTwd: Number(String(product.totalAv).replace(/,/g, '')) || 0,
+      hasIncomeEqualization: description.includes('收益平準金') || TITLE_CONFIRMED_EQUALIZATION.has(code),
+      equalizationBasis: description
+        ? '官方收益分配條款'
+        : TITLE_CONFIRMED_EQUALIZATION.has(code) ? '官方基金名稱與公開資料' : '未取得條款',
+      sourceUrl: `${TWSE}/zh/ETFortune-institute/etfInfo/${code}`,
+    };
+  });
+
+  return {
+    asOf: new Date().toISOString(),
+    marketStatus: '收盤',
+    scope: '每次同步依證交所「高股息」與「高息低波動」主題分類重建，並與國內成分股及國內主動式 ETF 官方清單取交集',
+    etfs,
+    sources: {
+      scope: `${TWSE}/zh/ETFortune-institute/products?tag=${encodeURIComponent('高股息')}`,
+      dividends: `${TWSE}/zh/ETFortune-institute/dividendList`,
+      prices: 'https://www.twse.com.tw/zh/trading/historical/mi-index.html',
+    },
+  };
+}
+
+const payload = await buildPayload();
+
+if (!Array.isArray(payload.etfs) || payload.etfs.length === 0) {
+  throw new Error('抓到 0 檔 ETF，判定為異常，保留原本的 data.json 不覆寫');
+}
+
+await writeFile('data.json', JSON.stringify(payload, null, 1) + '\n', 'utf8');
+console.log(`已寫入 data.json：${payload.etfs.length} 檔，資料時間 ${payload.asOf}`);
