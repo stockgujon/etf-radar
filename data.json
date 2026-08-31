@@ -1,5 +1,5 @@
 {
- "asOf": "2026-08-31T06:11:22.502Z",
+ "asOf": "2026-08-31T11:10:52.759Z",
  "marketStatus": "收盤",
  "scope": "每次同步依證交所「高股息」與「高息低波動」主題分類重建，並與國內成分股及國內主動式 ETF 官方清單取交集",
  "etfs": [
@@ -475,12 +475,15 @@
     "amount": 0.058,
     "exDate": "2026-08-04"
    },
-   "nextDividend": null,
+   "nextDividend": {
+    "amount": 0.058,
+    "exDate": "2026-09-02"
+   },
    "frequency": "月配",
    "frequencyBasis": "近次實際配息間隔",
    "paymentsPerYear": 12,
    "annualizedYield": 4.475884244372991,
-   "yieldBasis": "最近一次配息",
+   "yieldBasis": "下次已公告配息",
    "aumBillionTwd": 70,
    "hasIncomeEqualization": true,
    "equalizationBasis": "官方收益分配條款",
@@ -564,7 +567,7 @@
    "yieldBasis": null,
    "aumBillionTwd": 117,
    "hasIncomeEqualization": true,
-   "equalizationBasis": "官方基金名稱與公開資料",
+   "equalizationBasis": "官方收益分配條款",
    "sourceUrl": "https://wwwc.twse.com.tw/zh/ETFortune-institute/etfInfo/00999A"
   }
  ],
