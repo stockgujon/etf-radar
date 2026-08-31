@@ -1,5 +1,5 @@
 {
- "asOf": "2026-08-31T01:09:30.280Z",
+ "asOf": "2026-08-31T06:11:22.502Z",
  "marketStatus": "收盤",
  "scope": "每次同步依證交所「高股息」與「高息低波動」主題分類重建，並與國內成分股及國內主動式 ETF 官方清單取交集",
  "etfs": [
@@ -7,8 +7,8 @@
    "code": "00400A",
    "name": "主動國泰動能高息",
    "issuer": "國泰證券投資信託股份有限公司",
-   "price": 15,
-   "closeDate": "2026-08-28",
+   "price": 14.98,
+   "closeDate": "2026-08-31",
    "latestDividend": {
     "amount": 0.12,
     "exDate": "2026-08-05"
@@ -17,7 +17,7 @@
    "frequency": "月配",
    "frequencyBasis": "近次實際配息間隔",
    "paymentsPerYear": 12,
-   "annualizedYield": 9.6,
+   "annualizedYield": 9.612817089452601,
    "yieldBasis": "最近一次配息",
    "aumBillionTwd": 292,
    "hasIncomeEqualization": true,
@@ -28,8 +28,8 @@
    "code": "00405A",
    "name": "主動富邦台灣龍耀",
    "issuer": "富邦證券投資信託股份有限公司",
-   "price": 8.78,
-   "closeDate": "2026-08-28",
+   "price": 8.75,
+   "closeDate": "2026-08-31",
    "latestDividend": null,
    "nextDividend": null,
    "frequency": "季配",
@@ -46,8 +46,8 @@
    "code": "0056",
    "name": "元大高股息",
    "issuer": "元大證券投資信託股份有限公司",
-   "price": 53.85,
-   "closeDate": "2026-08-28",
+   "price": 54.6,
+   "closeDate": "2026-08-31",
    "latestDividend": {
     "amount": 1.35,
     "exDate": "2026-07-21"
@@ -56,7 +56,7 @@
    "frequency": "季配",
    "frequencyBasis": "近次實際配息間隔",
    "paymentsPerYear": 4,
-   "annualizedYield": 10.027855153203342,
+   "annualizedYield": 9.89010989010989,
    "yieldBasis": "最近一次配息",
    "aumBillionTwd": 7630,
    "hasIncomeEqualization": true,
@@ -67,8 +67,8 @@
    "code": "00701",
    "name": "國泰股利精選30",
    "issuer": "國泰證券投資信託股份有限公司",
-   "price": 38.3,
-   "closeDate": "2026-08-28",
+   "price": 38.72,
+   "closeDate": "2026-08-31",
    "latestDividend": {
     "amount": 1.6,
     "exDate": "2026-08-18"
@@ -77,7 +77,7 @@
    "frequency": "半年配",
    "frequencyBasis": "近次實際配息間隔",
    "paymentsPerYear": 2,
-   "annualizedYield": 8.355091383812011,
+   "annualizedYield": 8.264462809917356,
    "yieldBasis": "最近一次配息",
    "aumBillionTwd": 65,
    "hasIncomeEqualization": false,
@@ -88,8 +88,8 @@
    "code": "00713",
    "name": "元大台灣高息低波",
    "issuer": "元大證券投資信託股份有限公司",
-   "price": 61.55,
-   "closeDate": "2026-08-28",
+   "price": 61.9,
+   "closeDate": "2026-08-31",
    "latestDividend": {
     "amount": 1,
     "exDate": "2026-06-22"
@@ -98,7 +98,7 @@
    "frequency": "季配",
    "frequencyBasis": "近次實際配息間隔",
    "paymentsPerYear": 4,
-   "annualizedYield": 6.498781478472787,
+   "annualizedYield": 6.462035541195476,
    "yieldBasis": "最近一次配息",
    "aumBillionTwd": 1044,
    "hasIncomeEqualization": true,
@@ -109,8 +109,8 @@
    "code": "00730",
    "name": "富邦臺灣優質高息",
    "issuer": "富邦證券投資信託股份有限公司",
-   "price": 28.93,
-   "closeDate": "2026-08-28",
+   "price": 28.91,
+   "closeDate": "2026-08-31",
    "latestDividend": {
     "amount": 0.11,
     "exDate": "2026-08-18"
@@ -119,7 +119,7 @@
    "frequency": "月配",
    "frequencyBasis": "近次實際配息間隔",
    "paymentsPerYear": 12,
-   "annualizedYield": 4.562737642585551,
+   "annualizedYield": 4.565894154271878,
    "yieldBasis": "最近一次配息",
    "aumBillionTwd": 20,
    "hasIncomeEqualization": true,
@@ -130,8 +130,8 @@
    "code": "00731",
    "name": "復華富時高息低波",
    "issuer": "復華證券投資信託股份有限公司",
-   "price": 93.95,
-   "closeDate": "2026-08-28",
+   "price": 95.25,
+   "closeDate": "2026-08-31",
    "latestDividend": {
     "amount": 1.458,
     "exDate": "2026-08-19"
@@ -140,7 +140,7 @@
    "frequency": "季配",
    "frequencyBasis": "官方收益分配條款",
    "paymentsPerYear": 4,
-   "annualizedYield": 6.207557211282596,
+   "annualizedYield": 6.122834645669291,
    "yieldBasis": "最近一次配息",
    "aumBillionTwd": 19,
    "hasIncomeEqualization": true,
@@ -151,8 +151,8 @@
    "code": "00878",
    "name": "國泰永續高股息",
    "issuer": "國泰證券投資信託股份有限公司",
-   "price": 33,
-   "closeDate": "2026-08-28",
+   "price": 33.18,
+   "closeDate": "2026-08-31",
    "latestDividend": {
     "amount": 1.01,
     "exDate": "2026-08-18"
@@ -161,7 +161,7 @@
    "frequency": "季配",
    "frequencyBasis": "近次實際配息間隔",
    "paymentsPerYear": 4,
-   "annualizedYield": 12.242424242424242,
+   "annualizedYield": 12.176009644364076,
    "yieldBasis": "最近一次配息",
    "aumBillionTwd": 6247,
    "hasIncomeEqualization": true,
@@ -172,8 +172,8 @@
    "code": "00900",
    "name": "富邦特選高股息30",
    "issuer": "富邦證券投資信託股份有限公司",
-   "price": 19.03,
-   "closeDate": "2026-08-28",
+   "price": 19.29,
+   "closeDate": "2026-08-31",
    "latestDividend": {
     "amount": 0.075,
     "exDate": "2026-08-18"
@@ -182,7 +182,7 @@
    "frequency": "月配",
    "frequencyBasis": "近次實際配息間隔",
    "paymentsPerYear": 12,
-   "annualizedYield": 4.729374671571203,
+   "annualizedYield": 4.665629860031104,
    "yieldBasis": "最近一次配息",
    "aumBillionTwd": 299,
    "hasIncomeEqualization": true,
@@ -193,8 +193,8 @@
    "code": "00907",
    "name": "永豐優息存股",
    "issuer": "永豐證券投資信託股份有限公司",
-   "price": 17.11,
-   "closeDate": "2026-08-28",
+   "price": 17.26,
+   "closeDate": "2026-08-31",
    "latestDividend": {
     "amount": 0.24,
     "exDate": "2026-08-25"
@@ -203,7 +203,7 @@
    "frequency": "雙月配",
    "frequencyBasis": "官方收益分配條款",
    "paymentsPerYear": 6,
-   "annualizedYield": 8.416130917592051,
+   "annualizedYield": 8.342989571263034,
    "yieldBasis": "最近一次配息",
    "aumBillionTwd": 25,
    "hasIncomeEqualization": true,
@@ -214,8 +214,8 @@
    "code": "00915",
    "name": "凱基優選高股息30",
    "issuer": "凱基證券投資信託股份有限公司",
-   "price": 31.76,
-   "closeDate": "2026-08-28",
+   "price": 31.89,
+   "closeDate": "2026-08-31",
    "latestDividend": {
     "amount": 0.45,
     "exDate": "2026-06-16"
@@ -224,7 +224,7 @@
    "frequency": "季配",
    "frequencyBasis": "近次實際配息間隔",
    "paymentsPerYear": 4,
-   "annualizedYield": 5.6675062972292185,
+   "annualizedYield": 5.644402634054563,
    "yieldBasis": "最近一次配息",
    "aumBillionTwd": 163,
    "hasIncomeEqualization": true,
@@ -235,8 +235,8 @@
    "code": "00918",
    "name": "大華優利高填息30",
    "issuer": "大華銀證券投資信託股份有限公司",
-   "price": 34.26,
-   "closeDate": "2026-08-28",
+   "price": 34.61,
+   "closeDate": "2026-08-31",
    "latestDividend": {
     "amount": 1.26,
     "exDate": "2026-06-18"
@@ -245,7 +245,7 @@
    "frequency": "季配",
    "frequencyBasis": "近次實際配息間隔",
    "paymentsPerYear": 4,
-   "annualizedYield": 14.711033274956216,
+   "annualizedYield": 14.562265241259754,
    "yieldBasis": "最近一次配息",
    "aumBillionTwd": 1158,
    "hasIncomeEqualization": true,
@@ -256,8 +256,8 @@
    "code": "00919",
    "name": "群益台灣精選高息",
    "issuer": "群益證券投資信託股份有限公司",
-   "price": 31.44,
-   "closeDate": "2026-08-28",
+   "price": 31.96,
+   "closeDate": "2026-08-31",
    "latestDividend": {
     "amount": 1,
     "exDate": "2026-06-16"
@@ -266,7 +266,7 @@
    "frequency": "季配",
    "frequencyBasis": "近次實際配息間隔",
    "paymentsPerYear": 4,
-   "annualizedYield": 12.72264631043257,
+   "annualizedYield": 12.51564455569462,
    "yieldBasis": "最近一次配息",
    "aumBillionTwd": 5720,
    "hasIncomeEqualization": true,
@@ -277,8 +277,8 @@
    "code": "00929",
    "name": "復華台灣科技優息",
    "issuer": "復華證券投資信託股份有限公司",
-   "price": 29.13,
-   "closeDate": "2026-08-28",
+   "price": 29.15,
+   "closeDate": "2026-08-31",
    "latestDividend": {
     "amount": 0.38,
     "exDate": "2026-08-19"
@@ -287,7 +287,7 @@
    "frequency": "月配",
    "frequencyBasis": "官方收益分配條款",
    "paymentsPerYear": 12,
-   "annualizedYield": 15.65396498455201,
+   "annualizedYield": 15.643224699828476,
    "yieldBasis": "最近一次配息",
    "aumBillionTwd": 1474,
    "hasIncomeEqualization": true,
@@ -298,8 +298,8 @@
    "code": "00930",
    "name": "永豐ESG低碳高息",
    "issuer": "永豐證券投資信託股份有限公司",
-   "price": 23.89,
-   "closeDate": "2026-08-28",
+   "price": 23.78,
+   "closeDate": "2026-08-31",
    "latestDividend": {
     "amount": 0.25,
     "exDate": "2026-07-27"
@@ -308,7 +308,7 @@
    "frequency": "雙月配",
    "frequencyBasis": "近次實際配息間隔",
    "paymentsPerYear": 6,
-   "annualizedYield": 6.278777731268313,
+   "annualizedYield": 6.307821698906644,
    "yieldBasis": "最近一次配息",
    "aumBillionTwd": 31,
    "hasIncomeEqualization": true,
@@ -319,8 +319,8 @@
    "code": "00932",
    "name": "兆豐永續高息等權",
    "issuer": "兆豐國際證券投資信託股份有限公司",
-   "price": 17.52,
-   "closeDate": "2026-08-28",
+   "price": 17.53,
+   "closeDate": "2026-08-31",
    "latestDividend": {
     "amount": 0.23,
     "exDate": "2026-08-18"
@@ -329,7 +329,7 @@
    "frequency": "季配",
    "frequencyBasis": "官方收益分配條款",
    "paymentsPerYear": 4,
-   "annualizedYield": 5.251141552511416,
+   "annualizedYield": 5.248146035367941,
    "yieldBasis": "最近一次配息",
    "aumBillionTwd": 20,
    "hasIncomeEqualization": true,
@@ -340,8 +340,8 @@
    "code": "00934",
    "name": "中信成長高股息",
    "issuer": "中國信託證券投資信託股份有限公司",
-   "price": 29.61,
-   "closeDate": "2026-08-28",
+   "price": 29.8,
+   "closeDate": "2026-08-31",
    "latestDividend": {
     "amount": 0.3,
     "exDate": "2026-08-18"
@@ -350,7 +350,7 @@
    "frequency": "月配",
    "frequencyBasis": "官方收益分配條款",
    "paymentsPerYear": 12,
-   "annualizedYield": 12.1580547112462,
+   "annualizedYield": 12.080536912751676,
    "yieldBasis": "最近一次配息",
    "aumBillionTwd": 126,
    "hasIncomeEqualization": true,
@@ -361,8 +361,8 @@
    "code": "00936",
    "name": "台新永續高息中小",
    "issuer": "台新證券投資信託股份有限公司",
-   "price": 21.35,
-   "closeDate": "2026-08-28",
+   "price": 21.38,
+   "closeDate": "2026-08-31",
    "latestDividend": {
     "amount": 0.12,
     "exDate": "2026-08-17"
@@ -371,7 +371,7 @@
    "frequency": "月配",
    "frequencyBasis": "官方收益分配條款",
    "paymentsPerYear": 12,
-   "annualizedYield": 6.744730679156909,
+   "annualizedYield": 6.735266604303088,
    "yieldBasis": "最近一次配息",
    "aumBillionTwd": 42,
    "hasIncomeEqualization": true,
@@ -382,8 +382,8 @@
    "code": "00939",
    "name": "統一台灣高息動能",
    "issuer": "統一證券投資信託股份有限公司",
-   "price": 22.79,
-   "closeDate": "2026-08-28",
+   "price": 23.17,
+   "closeDate": "2026-08-31",
    "latestDividend": {
     "amount": 0.125,
     "exDate": "2026-07-31"
@@ -395,7 +395,7 @@
    "frequency": "月配",
    "frequencyBasis": "官方收益分配條款",
    "paymentsPerYear": 12,
-   "annualizedYield": 6.581834137779728,
+   "annualizedYield": 6.473888649115235,
    "yieldBasis": "下次已公告配息",
    "aumBillionTwd": 267,
    "hasIncomeEqualization": true,
@@ -406,8 +406,8 @@
    "code": "00940",
    "name": "元大台灣價值高息",
    "issuer": "元大證券投資信託股份有限公司",
-   "price": 12.69,
-   "closeDate": "2026-08-28",
+   "price": 12.78,
+   "closeDate": "2026-08-31",
    "latestDividend": {
     "amount": 0.05,
     "exDate": "2026-08-11"
@@ -416,7 +416,7 @@
    "frequency": "月配",
    "frequencyBasis": "近次實際配息間隔",
    "paymentsPerYear": 12,
-   "annualizedYield": 4.728132387706856,
+   "annualizedYield": 4.694835680751175,
    "yieldBasis": "最近一次配息",
    "aumBillionTwd": 669,
    "hasIncomeEqualization": true,
@@ -427,8 +427,8 @@
    "code": "00943",
    "name": "兆豐電子高息等權",
    "issuer": "兆豐國際證券投資信託股份有限公司",
-   "price": 21.38,
-   "closeDate": "2026-08-28",
+   "price": 21.25,
+   "closeDate": "2026-08-31",
    "latestDividend": {
     "amount": 0.12,
     "exDate": "2026-08-18"
@@ -437,7 +437,7 @@
    "frequency": "月配",
    "frequencyBasis": "官方收益分配條款",
    "paymentsPerYear": 12,
-   "annualizedYield": 6.735266604303088,
+   "annualizedYield": 6.776470588235293,
    "yieldBasis": "最近一次配息",
    "aumBillionTwd": 9,
    "hasIncomeEqualization": true,
@@ -448,8 +448,8 @@
    "code": "00944",
    "name": "野村趨勢動能高息",
    "issuer": "野村證券投資信託股份有限公司",
-   "price": 21,
-   "closeDate": "2026-08-28",
+   "price": 20.88,
+   "closeDate": "2026-08-31",
    "latestDividend": {
     "amount": 0.109,
     "exDate": "2026-08-18"
@@ -458,7 +458,7 @@
    "frequency": "月配",
    "frequencyBasis": "官方收益分配條款",
    "paymentsPerYear": 12,
-   "annualizedYield": 6.2285714285714295,
+   "annualizedYield": 6.264367816091955,
    "yieldBasis": "最近一次配息",
    "aumBillionTwd": 11,
    "hasIncomeEqualization": true,
@@ -469,8 +469,8 @@
    "code": "00946",
    "name": "群益科技高息成長",
    "issuer": "群益證券投資信託股份有限公司",
-   "price": 15.48,
-   "closeDate": "2026-08-28",
+   "price": 15.55,
+   "closeDate": "2026-08-31",
    "latestDividend": {
     "amount": 0.058,
     "exDate": "2026-08-04"
@@ -479,7 +479,7 @@
    "frequency": "月配",
    "frequencyBasis": "近次實際配息間隔",
    "paymentsPerYear": 12,
-   "annualizedYield": 4.496124031007752,
+   "annualizedYield": 4.475884244372991,
    "yieldBasis": "最近一次配息",
    "aumBillionTwd": 70,
    "hasIncomeEqualization": true,
@@ -490,8 +490,8 @@
    "code": "00961",
    "name": "FT臺灣永續高息",
    "issuer": "富蘭克林華美證券投資信託股份有限公司",
-   "price": 13.17,
-   "closeDate": "2026-08-28",
+   "price": 13.2,
+   "closeDate": "2026-08-31",
    "latestDividend": {
     "amount": 0.19,
     "exDate": "2026-08-18"
@@ -500,7 +500,7 @@
    "frequency": "月配",
    "frequencyBasis": "近次實際配息間隔",
    "paymentsPerYear": 12,
-   "annualizedYield": 17.3120728929385,
+   "annualizedYield": 17.272727272727277,
    "yieldBasis": "最近一次配息",
    "aumBillionTwd": 102,
    "hasIncomeEqualization": true,
@@ -511,8 +511,8 @@
    "code": "00962",
    "name": "台新AI優息動能",
    "issuer": "台新證券投資信託股份有限公司",
-   "price": 15.23,
-   "closeDate": "2026-08-28",
+   "price": 15.31,
+   "closeDate": "2026-08-31",
    "latestDividend": {
     "amount": 0.16,
     "exDate": "2026-08-17"
@@ -521,7 +521,7 @@
    "frequency": "月配",
    "frequencyBasis": "官方收益分配條款",
    "paymentsPerYear": 12,
-   "annualizedYield": 12.606697307944845,
+   "annualizedYield": 12.540822991508819,
    "yieldBasis": "最近一次配息",
    "aumBillionTwd": 9,
    "hasIncomeEqualization": true,
@@ -532,8 +532,8 @@
    "code": "00984A",
    "name": "主動安聯台灣高息",
    "issuer": "安聯證券投資信託股份有限公司",
-   "price": 15.75,
-   "closeDate": "2026-08-28",
+   "price": 15.68,
+   "closeDate": "2026-08-31",
    "latestDividend": {
     "amount": 0.415,
     "exDate": "2026-07-16"
@@ -542,7 +542,7 @@
    "frequency": "季配",
    "frequencyBasis": "近次實際配息間隔",
    "paymentsPerYear": 4,
-   "annualizedYield": 10.53968253968254,
+   "annualizedYield": 10.58673469387755,
    "yieldBasis": "最近一次配息",
    "aumBillionTwd": 102,
    "hasIncomeEqualization": true,
@@ -553,8 +553,8 @@
    "code": "00999A",
    "name": "主動野村臺灣高息",
    "issuer": "野村證券投資信託股份有限公司",
-   "price": 11.44,
-   "closeDate": "2026-08-28",
+   "price": 11.42,
+   "closeDate": "2026-08-31",
    "latestDividend": null,
    "nextDividend": null,
    "frequency": "季配",
