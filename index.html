@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>高息ETF配息雷達｜臺灣高股息 ETF 追蹤清單</title>
-<meta name="description" content="臺灣掛牌、投資國內股票且由證交所列為「高股息」或「高息低波動」因子的 ETF 追蹤清單，含收盤股價、最近與下次配息、年化殖利率、規模與收益平準金。" />
+<meta name="description" content="臺灣掛牌、由證交所列為「高股息」或「高息低波動」因子的 ETF 追蹤清單，含投資地區、收盤股價、最近與下次配息、年化殖利率、規模與收益平準金。" />
 <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2064%2064'%3E%3Crect%20width='64'%20height='64'%20rx='14'%20fill='%23a66d1f'/%3E%3Ctext%20x='32'%20y='46'%20font-size='40'%20font-family='sans-serif'%20font-weight='bold'%20fill='%23f3eadb'%20text-anchor='middle'%3E%E6%81%AF%3C/text%3E%3C/svg%3E" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -55,7 +55,7 @@ th small { font-size:14px; font-weight:500; letter-spacing:0; }
 .columnSelect { display:block; width:100%; min-width:0; margin-top:7px; padding:5px 18px 5px 6px; border:1px solid #d2b986; border-radius:8px; color:#4d3820; background:#fffaf1; font:700 12px/1.25 "Noto Sans TC","Segoe UI",sans-serif; letter-spacing:0; cursor:pointer; }
 .columnControls .columnSelect { margin-top:0; }
 .columnSelect:focus { outline:2px solid rgba(166,109,31,.28); outline-offset:1px; }
-th:nth-child(1) { width:7%; } th:nth-child(2) { width:17%; } th:nth-child(3) { width:10%; } th:nth-child(4) { width:10%; } th:nth-child(5) { width:10%; } th:nth-child(6) { width:9%; } th:nth-child(7) { width:12%; } th:nth-child(8) { width:9%; } th:nth-child(9) { width:16%; }
+th:nth-child(1) { width:6%; } th:nth-child(2) { width:16%; } th:nth-child(3) { width:9%; } th:nth-child(4) { width:10%; } th:nth-child(5) { width:10%; } th:nth-child(6) { width:9%; } th:nth-child(7) { width:11%; } th:nth-child(8) { width:8%; } th:nth-child(9) { width:8%; } th:nth-child(10) { width:13%; }
 td { padding:12px 8px; border-top:1px solid #eadcc4; vertical-align:top; font-size:18px; overflow-wrap:anywhere; }
 tbody tr:hover { background:#fff7e6; }
 .code { display:inline-block; padding:8px 9px; border-radius:9px; color:white; background:var(--green); font:800 18px/1 "Roboto Mono",Consolas,monospace; letter-spacing:.02em; white-space:nowrap; }
@@ -72,6 +72,8 @@ tbody tr:hover { background:#fff7e6; }
 .pill { display:inline-block; min-width:40px; padding:7px 10px; border-radius:999px; text-align:center; font-size:16px; font-weight:900; }
 .pill.yes { color:#6c4817; background:var(--mint); }
 .pill.no { color:#76674f; background:#ede3d2; }
+.pill.domestic { color:#4f6327; background:#e7edcd; }
+.pill.overseas { color:#7b5630; background:#f0e1cd; }
 .empty { padding:40px; text-align:center; color:#8b795d; }
 .errorBox { display:flex; align-items:center; gap:14px; margin-bottom:16px; padding:14px 16px; border:1px solid #d8a187; border-radius:14px; color:#713d2c; background:#fff0e7; font-size:17px; }
 .errorBox div { flex:1; }
@@ -85,7 +87,7 @@ tbody tr:hover { background:#fff7e6; }
 .footerNote p { margin:0; max-width:720px; }
 .footerNote a { color:var(--green); font-weight:800; }
 .sourceBadge,.heroMeta span:nth-child(2),.cards strong,.resultLine,td:nth-child(1),td:nth-child(3),td:nth-child(4),td:nth-child(5),td:nth-child(7),td:nth-child(8) { font-family:"Roboto Mono","Noto Sans TC",Consolas,monospace; font-variant-numeric:tabular-nums; }
-@media (max-width:900px) { .methodGrid { grid-template-columns:1fr; } .footerNote { flex-direction:column; } table { min-width:1180px; } }
+@media (max-width:900px) { .methodGrid { grid-template-columns:1fr; } .footerNote { flex-direction:column; } table { min-width:1320px; } }
 @media (max-width:720px) { .sourceBadge { display:none; } .hero { padding-top:46px; } .cards { grid-template-columns:1fr; } .toolbar { align-items:stretch; flex-direction:column; } .search { max-width:none; } .clearFilters,.refresh { padding:12px; } .panel { width:calc(100% - 24px); padding:14px; } .panelHeading { align-items:flex-start; flex-direction:column; } .panelHeading .refresh { width:100%; } .resultLine { align-items:flex-start; flex-direction:column; gap:4px; } }
 </style>
 </head>
@@ -99,20 +101,20 @@ tbody tr:hover { background:#fff7e6; }
   <section class="hero" id="top">
     <p class="eyebrow">TAIWAN HIGH DIVIDEND ETF TRACKER</p>
     <h1>高息ETF<em>最新配息</em>資訊</h1>
-    <p class="lede">只收錄臺灣掛牌、投資國內股票，且由證交所列為「高股息」或「高息低波動」因子的 ETF。股價統一採用證交所最新收盤價，並標示該筆行情的參考日期。</p>
+    <p class="lede">收錄臺灣掛牌、由證交所列為「高股息」或「高息低波動」因子的 ETF，投資國內與國外的都在同一張表裡，可用「投資地區」欄自行篩選。股價統一採用證交所最新收盤價，並標示該筆行情的參考日期。</p>
     <div class="heroMeta"><span>每次同步重建清單</span><span>每天自動更新 3 次</span><span>殖利率公式透明</span></div>
   </section>
 
   <section class="panel" id="panel" aria-busy="true">
     <div class="panelHeading">
-      <div><p class="sectionLabel">VERIFIED WATCHLIST</p><h2>國內高息 ETF 全清單</h2></div>
+      <div><p class="sectionLabel">VERIFIED WATCHLIST</p><h2>高息 ETF 全清單</h2></div>
       <button class="refresh" id="refreshBtn" type="button">同步中…</button>
     </div>
 
     <div id="errorSlot"></div>
 
     <div class="cards">
-      <article><span>追蹤商品</span><strong id="cardCount">—</strong><small>官方主題分類交集</small></article>
+      <article><span>追蹤商品</span><strong id="cardCount">—</strong><small>證交所主題分類</small></article>
       <article><span>最高暴力換算殖利率</span><strong id="cardYield">—</strong><small>非報酬率或配息保證</small></article>
       <article><span>含收益平準金條款</span><strong class="accent" id="cardEq">—</strong><small>依官方收益分配條款</small></article>
     </div>
@@ -135,6 +137,7 @@ tbody tr:hover { background:#fff7e6; }
           <th>配息頻率<select class="columnSelect" id="filterFrequency" aria-label="配息頻率篩選"><option value="all">全部頻率</option></select></th>
           <th>年化殖利率<br /><small>單次配息暴力換算</small><div class="columnControls"><select class="columnSelect" id="filterYield" aria-label="年化殖利率資料篩選"><option value="all">全部資料</option><option value="has">有資料</option><option value="none">無資料</option></select><select class="columnSelect" id="sortYield" aria-label="年化殖利率排序"><option value="">殖利率排序</option><option value="yield_desc">高 → 低</option><option value="yield_asc">低 → 高</option></select></div></th>
           <th>商品規模<select class="columnSelect" id="sortAum" aria-label="商品規模排序"><option value="">排序</option><option value="aum_desc">大 → 小</option><option value="aum_asc">小 → 大</option></select></th>
+          <th>投資地區<select class="columnSelect" id="filterRegion" aria-label="投資地區篩選"><option value="all">全部地區</option><option value="國內">國內</option><option value="國外">國外</option></select></th>
           <th>收益平準金<select class="columnSelect" id="filterEq" aria-label="收益平準金篩選"><option value="all">全部</option><option value="yes">有</option><option value="no">無</option></select></th>
         </tr></thead>
         <tbody id="tbody"></tbody>
@@ -186,7 +189,7 @@ tbody tr:hover { background:#fff7e6; }
 
   var state = {
     payload: null, loading: true, error: '',
-    query: '', equalization: 'all',
+    query: '', equalization: 'all', region: 'all',
     latestFilter: 'all', nextFilter: 'all', yieldFilter: 'all',
     frequency: 'all', sort: 'yield_desc'
   };
@@ -267,6 +270,7 @@ tbody tr:hover { background:#fff7e6; }
       if (state.yieldFilter !== 'all' && (state.yieldFilter === 'has' ? etf.annualizedYield == null : etf.annualizedYield != null)) return false;
       if (state.frequency !== 'all' && etf.frequency !== state.frequency) return false;
       if (state.equalization !== 'all' && (state.equalization === 'yes' ? !etf.hasIncomeEqualization : etf.hasIncomeEqualization)) return false;
+      if (state.region !== 'all' && etf.region !== state.region) return false;
       return true;
     }).sort(function (a, b) {
       switch (state.sort) {
@@ -314,6 +318,8 @@ tbody tr:hover { background:#fff7e6; }
       '<td><strong class="yield" title="以' + esc(etf.yieldBasis || '可用配息') + ' × 每年 ' + esc(etf.paymentsPerYear) + ' 次 ÷ 股價換算">' + yieldText + '</strong>' +
         '<span class="subtext">' + esc(etf.yieldBasis || '缺少可用配息') + '</span></td>' +
       '<td><strong>' + integerFmt.format(etf.aumBillionTwd) + ' 億</strong><span class="subtext">新臺幣</span></td>' +
+      '<td><span class="' + (etf.region === '國內' ? 'pill domestic' : etf.region ? 'pill overseas' : 'pill no') + '">' + esc(etf.region || '—') + '</span>' +
+        '<span class="subtext">' + esc(etf.regionDetail || '') + '</span></td>' +
       '<td><span class="' + (etf.hasIncomeEqualization ? 'pill yes' : 'pill no') + '">' + (etf.hasIncomeEqualization ? '有' : '無') + '</span>' +
         '<span class="subtext">' + esc(etf.equalizationBasis) + '</span></td>' +
       '</tr>';
@@ -355,7 +361,7 @@ tbody tr:hover { background:#fff7e6; }
 
     el('tbody').innerHTML = rows.length
       ? rows.map(rowHtml).join('')
-      : (!state.loading && !state.error ? '<tr><td colspan="9" class="empty">找不到符合條件的商品</td></tr>' : '');
+      : (!state.loading && !state.error ? '<tr><td colspan="10" class="empty">找不到符合條件的商品</td></tr>' : '');
 
     if (payload && payload.scope) el('scopeText').textContent = payload.scope;
     if (payload && payload.sources) {
@@ -382,14 +388,15 @@ tbody tr:hover { background:#fff7e6; }
   el('filterYield').addEventListener('change', function (event) { state.yieldFilter = event.target.value; render(); });
   el('filterFrequency').addEventListener('change', function (event) { state.frequency = event.target.value; render(); });
   el('filterEq').addEventListener('change', function (event) { state.equalization = event.target.value; render(); });
+  el('filterRegion').addEventListener('change', function (event) { state.region = event.target.value; render(); });
   ['sortPrice', 'sortLatest', 'sortNext', 'sortYield', 'sortAum'].forEach(bindSort);
   el('refreshBtn').addEventListener('click', function () { void load(); });
   el('clearBtn').addEventListener('click', function () {
-    state.query = ''; state.equalization = 'all';
+    state.query = ''; state.equalization = 'all'; state.region = 'all';
     state.latestFilter = 'all'; state.nextFilter = 'all'; state.yieldFilter = 'all';
     state.frequency = 'all'; state.sort = 'yield_desc';
     el('query').value = '';
-    ['filterLatest', 'filterNext', 'filterYield', 'filterFrequency', 'filterEq'].forEach(function (id) { el(id).value = 'all'; });
+    ['filterLatest', 'filterNext', 'filterYield', 'filterFrequency', 'filterEq', 'filterRegion'].forEach(function (id) { el(id).value = 'all'; });
     ['sortPrice', 'sortLatest', 'sortNext', 'sortYield', 'sortAum'].forEach(function (id) { el(id).value = ''; });
     render();
   });
