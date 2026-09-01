@@ -542,7 +542,19 @@ jobs:
           git add data.json
           if git diff --staged --quiet; then
             echo "資料沒有變化，不需要提交"
-          else
-            git commit -m "自動更新 ETF 資料（$(TZ=Asia/Taipei date '+%Y-%m-%d %H:%M') 台北）"
-            git push
+            exit 0
           fi
+          git commit -m "自動更新 ETF 資料（$(TZ=Asia/Taipei date '+%Y-%m-%d %H:%M') 台北）"
+          # 抓資料期間若剛好有人推了別的變更（例如更新 index.html），push 會被拒絕。
+          # 這裡先把遠端的變更接到自己下面再重試，避免整批白做。
+          for attempt in 1 2 3; do
+            if git push; then
+              echo "已推送（第 ${attempt} 次嘗試）"
+              exit 0
+            fi
+            echo "推送被拒，取回遠端變更後重試…"
+            git pull --rebase --autostash origin "${GITHUB_REF_NAME}" || true
+            sleep 5
+          done
+          echo "連續 3 次推送失敗"
+          exit 1
