@@ -79,7 +79,7 @@ tbody tr:hover { background:#fff7e6; }
 .errorBox div { flex:1; }
 .errorBox .hint { display:block; margin-top:5px; color:#8a5b46; font-size:14px; line-height:1.5; }
 .errorBox button { flex:0 0 auto; border:0; border-radius:9px; padding:9px 12px; color:white; background:#9a5636; cursor:pointer; }
-.methodGrid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-top:18px; }
+.methodGrid { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:12px; margin-top:18px; }
 .methodGrid article { padding:18px; border:1px solid var(--line); border-radius:18px; background:#fbf2e1; }
 .methodGrid b { font-family:Georgia,"Noto Serif TC",serif; font-size:21px; }
 .methodGrid p { margin:8px 0 0; color:#756249; font-size:16px; line-height:1.7; }
@@ -146,12 +146,13 @@ tbody tr:hover { background:#fff7e6; }
 
     <div class="methodGrid">
       <article><b>殖利率怎麼算？</b><p>以除息交易日判斷：優先用「除息日尚未到的下次已公告配息金額 × 每年配息次數 ÷ 現價」；若沒有，才使用最近一次已除息配息。這是單次配息的簡單年化，不代表基金報酬率。</p></article>
-      <article><b>收益平準金怎麼判斷？</b><p>不是看本次配息是否真的使用，而是查官方收益分配條款是否把「收益平準金」列為可分配收益來源。</p></article>
+      <article><b>「公告預估」是什麼？</b><p>證交所的配息清單只收錄已除息完成的紀錄，所以「下次配息」另外取自投信在證交所發布的收益分配公告。公告當下的金額是投信依評價日資料<b>估算</b>的預估值，實際金額會在現金收益公布日才確定，兩者可能有差異。</p></article>
+          <article><b>收益平準金怎麼判斷？</b><p>不是看本次配息是否真的使用，而是查官方收益分配條款是否把「收益平準金」列為可分配收益來源。</p></article>
       <article><b>清單怎麼界定？</b><p id="scopeText">依證交所高股息與高息低波動主題因子，篩出臺灣掛牌、投資國內股票的 ETF。</p></article>
     </div>
 
     <footer class="footerNote">
-      <p>資料來源：<a id="srcScope" href="https://www.twse.com.tw/zh/ETFortune-institute/products" target="_blank" rel="noreferrer">證交所 ETF e添富商品篩選器</a>、<a id="srcDiv" href="https://www.twse.com.tw/zh/ETFortune-institute/dividendList" target="_blank" rel="noreferrer">證交所配息資訊</a>、<a id="srcPrice" href="https://www.twse.com.tw/zh/trading/historical/mi-index.html" target="_blank" rel="noreferrer">證交所上市個股日成交資訊</a>。</p>
+      <p>資料來源：<a id="srcScope" href="https://www.twse.com.tw/zh/ETFortune-institute/products" target="_blank" rel="noreferrer">證交所 ETF e添富商品篩選器</a>、<a id="srcDiv" href="https://www.twse.com.tw/zh/ETFortune-institute/dividendList" target="_blank" rel="noreferrer">證交所配息資訊</a>、<a id="srcPrice" href="https://www.twse.com.tw/zh/trading/historical/mi-index.html" target="_blank" rel="noreferrer">證交所上市個股日成交資訊</a>、<a href="https://www.twse.com.tw/zh/ETFortune/announcementList?type=distribution" target="_blank" rel="noreferrer">證交所收益分配公告</a>。</p>
       <p>投資一定有風險，配息金額與頻率均可能變動；本頁僅為資料整理，不構成投資建議。</p>
     </footer>
   </section>
@@ -303,7 +304,8 @@ tbody tr:hover { background:#fff7e6; }
       ? '<strong>$' + amountFmt.format(etf.latestDividend.amount) + '</strong><span class="subtext">' + formatDate(etf.latestDividend.exDate) + ' 除息</span>'
       : '<span class="muted">尚無紀錄</span>';
     var next = etf.nextDividend
-      ? '<strong class="nextDividend">$' + amountFmt.format(etf.nextDividend.amount) + '</strong><span class="subtext">' + formatDate(etf.nextDividend.exDate) + ' 除息</span>'
+      ? '<strong class="nextDividend">$' + amountFmt.format(etf.nextDividend.amount) + '</strong><span class="subtext">' + formatDate(etf.nextDividend.exDate) + ' 除息'
+        + (etf.nextDividendSource === '公告預估' ? ' ・公告預估' : '') + '</span>'
       : '<span class="muted">尚未公布</span>';
     var yieldText = etf.annualizedYield == null ? '—' : etf.annualizedYield.toFixed(2) + '%';
 
