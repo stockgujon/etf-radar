@@ -225,6 +225,128 @@ jobs:
             return { label: '年配', times: 1, basis: '近次實際配息間隔' };
           }
 
+          /* ------------------------------------------------------------------
+             投信「收益分配公告」— 用來補上「下次配息」
+             證交所的配息清單只收錄「已經除息完成」的紀錄，未來已公告但還沒除息的
+             一筆都沒有。所以這裡另外去爬重大消息的收益分配公告，取出除息交易日與
+             公告預估的每單位配發金額。
+
+             注意：公告裡的金額是「預估」值，實際金額會在現金收益公布日才確定。
+             這段整段包在 try/catch 裡，抓不到或解析失敗都只會少了下次配息，
+             不會影響其他資料，也不會讓整個排程失敗。
+          ------------------------------------------------------------------ */
+          const ANNOUNCEMENT_PAGE_SIZE = 100;   // 每頁請求筆數（證交所若不接受會自動退回較小值）
+          const ANNOUNCEMENT_MAX_PAGES = 30;    // 最多翻幾頁（碰到超過保留天數的公告就提早停）
+          const ANNOUNCEMENT_MAX_AGE_DAYS = 45; // 只看最近幾天內的公告
+          const ANNOUNCEMENT_MAX_DETAILS = 60;  // 最多點開幾則公告內文
+
+          // 公告內文裡描述配息金額的寫法各家投信不同，逐一嘗試；都不符合就放棄，不硬猜。
+          const ANNOUNCEMENT_AMOUNT_PATTERNS = [
+            /每受益權單位預計配發金額為新臺幣\s*([0-9]+(?:\.[0-9]+)?)\s*元/,
+            /每一?受益權單位(?:之|的)?(?:預計|實際)?(?:可)?(?:配發|分配|發放)(?:之)?金額[^0-9]{0,24}([0-9]+(?:\.[0-9]+)?)\s*元/,
+            /每一?受益權單位[^。\n]{0,24}?新臺幣\s*([0-9]+(?:\.[0-9]+)?)\s*元/,
+          ];
+
+          function rocSlashDateToIso(value) {
+            const match = String(value).match(/(\d{2,3})\s*[\/\-年]\s*(\d{1,2})\s*[\/\-月]\s*(\d{1,2})/);
+            if (!match) return null;
+            const year = Number(match[1]) + 1911;
+            return `${year}-${match[2].padStart(2, '0')}-${match[3].padStart(2, '0')}`;
+          }
+
+          // 列表頁：每一列的 onclick 網址裡就帶了 fund=<股票代號> 與 date=<公告日>，
+          // 不必去猜基金全名對應哪一檔，直接取用。
+          function parseAnnouncementList(html) {
+            const items = [];
+            const pattern = /document\.location = '([^']*\/zh\/ETFortune\/announcement\?[^']+)'/g;
+            for (const match of html.matchAll(pattern)) {
+              const href = match[1].replace(/&amp;/g, '&');
+              const fund = /[?&]fund=([^&]*)/.exec(href);
+              const date = /[?&]date=(\d{8})/.exec(href);
+              if (!fund || !fund[1] || !date) continue;
+              items.push({
+                code: decodeURIComponent(fund[1]).trim(),
+                announcedOn: `${date[1].slice(0, 4)}-${date[1].slice(4, 6)}-${date[1].slice(6, 8)}`,
+                href,
+              });
+            }
+            return items;
+          }
+
+          // 公告內文：取出「除息交易日」與「每受益權單位預計配發金額」
+          function parseAnnouncementDetail(html) {
+            const text = html
+              .replace(/<br\s*\/?>/gi, '\n')
+              .replace(/<[^>]+>/g, ' ')
+              .replace(/&nbsp;|&#160;/g, ' ')
+              .replace(/&amp;/g, '&')
+              .replace(/[ \t]+/g, ' ');
+
+            const exDateMatch = /除息交易日\s*[:：]?\s*([0-9]{2,3}\s*[\/\-年]\s*[0-9]{1,2}\s*[\/\-月]\s*[0-9]{1,2})/.exec(text);
+            const exDate = exDateMatch ? rocSlashDateToIso(exDateMatch[1]) : null;
+
+            let amount = null;
+            for (const pattern of ANNOUNCEMENT_AMOUNT_PATTERNS) {
+              const match = pattern.exec(text);
+              if (match) {
+                const value = Number(match[1]);
+                if (Number.isFinite(value) && value > 0) { amount = value; break; }
+              }
+            }
+            return { exDate, amount };
+          }
+
+          function daysBetween(isoA, isoB) {
+            return Math.abs(new Date(`${isoA}T00:00:00Z`) - new Date(`${isoB}T00:00:00Z`)) / 86400000;
+          }
+
+          // 掃描收益分配公告，回傳 Map<代號, { exDate, amount, announcedOn }>
+          async function fetchAnnouncedDividends(trackedCodes, today) {
+            const wanted = new Set(trackedCodes);
+            const newestByCode = new Map();
+            let offset = 0;
+
+            for (let page = 0; page < ANNOUNCEMENT_MAX_PAGES; page += 1) {
+              const attempt = await tryHosts(
+                `/zh/ETFortune/announcementList?type=distribution&max=${ANNOUNCEMENT_PAGE_SIZE}&offset=${offset}`,
+                undefined,
+                async (response) => {
+                  const html = await response.text();
+                  const items = parseAnnouncementList(html);
+                  return items.length ? items : null;
+                },
+              );
+              const items = attempt.value;
+              if (!items) break;
+
+              let reachedOldEnough = false;
+              for (const item of items) {
+                if (daysBetween(item.announcedOn, today) > ANNOUNCEMENT_MAX_AGE_DAYS) { reachedOldEnough = true; continue; }
+                // 列表由新到舊，因此每一檔第一次出現的就是最新的一則公告
+                if (wanted.has(item.code) && !newestByCode.has(item.code)) newestByCode.set(item.code, item);
+              }
+
+              offset += items.length;
+              if (reachedOldEnough || newestByCode.size >= wanted.size) break;
+            }
+
+            const announced = new Map();
+            let opened = 0;
+            for (const [code, item] of newestByCode) {
+              if (opened >= ANNOUNCEMENT_MAX_DETAILS) break;
+              opened += 1;
+              const attempt = await tryHosts(item.href, undefined, async (response) => {
+                const detail = parseAnnouncementDetail(await response.text());
+                return detail.exDate ? detail : null;
+              });
+              const detail = attempt.value;
+              if (!detail || detail.amount === null) continue;      // 例如「不予分配」的公告
+              if (!(detail.exDate > today)) continue;               // 只要還沒除息的
+              announced.set(code, { ...detail, announcedOn: item.announcedOn });
+            }
+            return announced;
+          }
+
           function taipeiToday() {
             const parts = new Intl.DateTimeFormat('en-CA', {
               timeZone: 'Asia/Taipei', year: 'numeric', month: '2-digit', day: '2-digit',
@@ -316,6 +438,15 @@ jobs:
             const dividendRows = parseDividendRows(dividendHtml).filter((row) => trackedCodeSet.has(row.code));
             const today = taipeiToday();
 
+            // 加分項：抓投信的收益分配公告來補「下次配息」。整段失敗也只是少了這一欄。
+            let announcedDividends = new Map();
+            try {
+              announcedDividends = await fetchAnnouncedDividends(trackedCodes, today);
+              console.log(`收益分配公告：補到 ${announcedDividends.size} 檔的下次配息`);
+            } catch (reason) {
+              console.warn(`收益分配公告掃描失敗，略過（不影響其他資料）：${reason && reason.message}`);
+            }
+
             const etfs = trackedCodes.map((code) => {
               const product = productsByCode.get(code);
               const dailyClose = closesByCode.get(code);
@@ -325,10 +456,24 @@ jobs:
               const records = dividendRows
                 .filter((row) => row.code === code && row.exDate)
                 .sort((a, b) => (b.exDate || '').localeCompare(a.exDate || ''));
-              const nextDividend = [...records]
+              const listedNext = [...records]
                 .filter((row) => row.exDate > today && row.amount !== null)
                 .sort((a, b) => rowDate(a).localeCompare(rowDate(b)))[0] || null;
               const latestDividend = records.find((row) => row.exDate <= today && row.amount !== null) || null;
+
+              // 用公告補上下次配息：必須晚於今天，也必須晚於「最近一次配息」，避免兩欄重疊
+              let nextDividend = listedNext ? { amount: listedNext.amount, exDate: listedNext.exDate } : null;
+              let nextDividendSource = listedNext ? '證交所配息清單' : null;
+              const announced = announcedDividends.get(code);
+              if (
+                announced
+                && announced.exDate > today
+                && (!latestDividend || announced.exDate > latestDividend.exDate)
+                && (!nextDividend || announced.exDate < nextDividend.exDate)
+              ) {
+                nextDividend = { amount: announced.amount, exDate: announced.exDate };
+                nextDividendSource = '公告預估';
+              }
               const description = (records.find((row) => row.description) || {}).description || '';
               const frequency = FREQUENCY_OVERRIDES[code] || inferFrequency(records, description);
               const placement = resolveRegion(code, product.stockName, domesticCodes);
@@ -346,12 +491,15 @@ jobs:
                 price,
                 closeDate: dailyClose.date,
                 latestDividend: latestDividend ? { amount: latestDividend.amount, exDate: latestDividend.exDate } : null,
-                nextDividend: nextDividend ? { amount: nextDividend.amount, exDate: nextDividend.exDate } : null,
+                nextDividend,
+                nextDividendSource,
                 frequency: frequency.label,
                 frequencyBasis: frequency.basis,
                 paymentsPerYear: frequency.times,
                 annualizedYield,
-                yieldBasis: nextDividend ? '下次已公告配息' : latestDividend ? '最近一次配息' : null,
+                yieldBasis: nextDividend
+                  ? (nextDividendSource === '公告預估' ? '下次配息（公告預估）' : '下次已公告配息')
+                  : latestDividend ? '最近一次配息' : null,
                 aumBillionTwd: Number(String(product.totalAv).replace(/,/g, '')) || 0,
                 hasIncomeEqualization: description.includes('收益平準金') || TITLE_CONFIRMED_EQUALIZATION.has(code),
                 equalizationBasis: description
