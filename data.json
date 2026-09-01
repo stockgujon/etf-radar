@@ -1,12 +1,14 @@
 {
- "asOf": "2026-09-01T06:23:27.416Z",
+ "asOf": "2026-09-01T07:02:51.832Z",
  "marketStatus": "收盤",
- "scope": "每次同步依證交所「高股息」與「高息低波動」主題分類重建，並與國內成分股及國內主動式 ETF 官方清單取交集",
+ "scope": "每次同步依證交所「高股息」與「高息低波動」主題分類重建，收錄該分類下的全部臺灣掛牌 ETF；再與證交所「國內成分證券 ETF」及「國內主動式 ETF」官方清單比對，標示每一檔的投資地區。",
  "etfs": [
   {
    "code": "00400A",
    "name": "主動國泰動能高息",
    "issuer": "國泰證券投資信託股份有限公司",
+   "region": "國內",
+   "regionDetail": "國內成分證券",
    "price": 15.37,
    "closeDate": "2026-09-01",
    "latestDividend": {
@@ -22,12 +24,14 @@
    "aumBillionTwd": 287,
    "hasIncomeEqualization": true,
    "equalizationBasis": "官方收益分配條款",
-   "sourceUrl": "https://wwwc.twse.com.tw/zh/ETFortune-institute/etfInfo/00400A"
+   "sourceUrl": "https://www.twse.com.tw/zh/ETFortune-institute/etfInfo/00400A"
   },
   {
    "code": "00405A",
    "name": "主動富邦台灣龍耀",
    "issuer": "富邦證券投資信託股份有限公司",
+   "region": "國內",
+   "regionDetail": "國內成分證券",
    "price": 8.93,
    "closeDate": "2026-09-01",
    "latestDividend": null,
@@ -40,12 +44,14 @@
    "aumBillionTwd": 285,
    "hasIncomeEqualization": true,
    "equalizationBasis": "官方基金名稱與公開資料",
-   "sourceUrl": "https://wwwc.twse.com.tw/zh/ETFortune-institute/etfInfo/00405A"
+   "sourceUrl": "https://www.twse.com.tw/zh/ETFortune-institute/etfInfo/00405A"
   },
   {
    "code": "0056",
    "name": "元大高股息",
    "issuer": "元大證券投資信託股份有限公司",
+   "region": "國內",
+   "regionDetail": "國內成分證券",
    "price": 54.85,
    "closeDate": "2026-09-01",
    "latestDividend": {
@@ -61,12 +67,14 @@
    "aumBillionTwd": 7718,
    "hasIncomeEqualization": true,
    "equalizationBasis": "官方收益分配條款",
-   "sourceUrl": "https://wwwc.twse.com.tw/zh/ETFortune-institute/etfInfo/0056"
+   "sourceUrl": "https://www.twse.com.tw/zh/ETFortune-institute/etfInfo/0056"
   },
   {
    "code": "00701",
    "name": "國泰股利精選30",
    "issuer": "國泰證券投資信託股份有限公司",
+   "region": "國內",
+   "regionDetail": "國內成分證券",
    "price": 39.07,
    "closeDate": "2026-09-01",
    "latestDividend": {
@@ -82,12 +90,37 @@
    "aumBillionTwd": 66,
    "hasIncomeEqualization": false,
    "equalizationBasis": "官方收益分配條款",
-   "sourceUrl": "https://wwwc.twse.com.tw/zh/ETFortune-institute/etfInfo/00701"
+   "sourceUrl": "https://www.twse.com.tw/zh/ETFortune-institute/etfInfo/00701"
+  },
+  {
+   "code": "00702",
+   "name": "國泰標普低波高息",
+   "issuer": "國泰證券投資信託股份有限公司",
+   "region": "國外",
+   "regionDetail": "美國",
+   "price": 24.92,
+   "closeDate": "2026-09-01",
+   "latestDividend": {
+    "amount": 0.68,
+    "exDate": "2026-07-16"
+   },
+   "nextDividend": null,
+   "frequency": "半年配",
+   "frequencyBasis": "近次實際配息間隔",
+   "paymentsPerYear": 2,
+   "annualizedYield": 5.457463884430177,
+   "yieldBasis": "最近一次配息",
+   "aumBillionTwd": 2,
+   "hasIncomeEqualization": false,
+   "equalizationBasis": "官方收益分配條款",
+   "sourceUrl": "https://www.twse.com.tw/zh/ETFortune-institute/etfInfo/00702"
   },
   {
    "code": "00713",
    "name": "元大台灣高息低波",
    "issuer": "元大證券投資信託股份有限公司",
+   "region": "國內",
+   "regionDetail": "國內成分證券",
    "price": 62.35,
    "closeDate": "2026-09-01",
    "latestDividend": {
@@ -103,12 +136,37 @@
    "aumBillionTwd": 1052,
    "hasIncomeEqualization": true,
    "equalizationBasis": "官方收益分配條款",
-   "sourceUrl": "https://wwwc.twse.com.tw/zh/ETFortune-institute/etfInfo/00713"
+   "sourceUrl": "https://www.twse.com.tw/zh/ETFortune-institute/etfInfo/00713"
+  },
+  {
+   "code": "00717",
+   "name": "富邦美國特別股",
+   "issuer": "富邦證券投資信託股份有限公司",
+   "region": "國外",
+   "regionDetail": "美國",
+   "price": 14.67,
+   "closeDate": "2026-09-01",
+   "latestDividend": {
+    "amount": 0.141,
+    "exDate": "2026-07-16"
+   },
+   "nextDividend": null,
+   "frequency": "季配",
+   "frequencyBasis": "近次實際配息間隔",
+   "paymentsPerYear": 4,
+   "annualizedYield": 3.8445807770961142,
+   "yieldBasis": "最近一次配息",
+   "aumBillionTwd": 18,
+   "hasIncomeEqualization": false,
+   "equalizationBasis": "官方收益分配條款",
+   "sourceUrl": "https://www.twse.com.tw/zh/ETFortune-institute/etfInfo/00717"
   },
   {
    "code": "00730",
    "name": "富邦臺灣優質高息",
    "issuer": "富邦證券投資信託股份有限公司",
+   "region": "國內",
+   "regionDetail": "國內成分證券",
    "price": 29.26,
    "closeDate": "2026-09-01",
    "latestDividend": {
@@ -124,12 +182,14 @@
    "aumBillionTwd": 20,
    "hasIncomeEqualization": true,
    "equalizationBasis": "官方收益分配條款",
-   "sourceUrl": "https://wwwc.twse.com.tw/zh/ETFortune-institute/etfInfo/00730"
+   "sourceUrl": "https://www.twse.com.tw/zh/ETFortune-institute/etfInfo/00730"
   },
   {
    "code": "00731",
    "name": "復華富時高息低波",
    "issuer": "復華證券投資信託股份有限公司",
+   "region": "國內",
+   "regionDetail": "國內成分證券",
    "price": 96.45,
    "closeDate": "2026-09-01",
    "latestDividend": {
@@ -145,12 +205,37 @@
    "aumBillionTwd": 19,
    "hasIncomeEqualization": true,
    "equalizationBasis": "官方收益分配條款",
-   "sourceUrl": "https://wwwc.twse.com.tw/zh/ETFortune-institute/etfInfo/00731"
+   "sourceUrl": "https://www.twse.com.tw/zh/ETFortune-institute/etfInfo/00731"
+  },
+  {
+   "code": "00771",
+   "name": "元大US高息特別股",
+   "issuer": "元大證券投資信託股份有限公司",
+   "region": "國外",
+   "regionDetail": "美國",
+   "price": 15.29,
+   "closeDate": "2026-09-01",
+   "latestDividend": {
+    "amount": 0.21,
+    "exDate": "2026-08-21"
+   },
+   "nextDividend": null,
+   "frequency": "季配",
+   "frequencyBasis": "近次實際配息間隔",
+   "paymentsPerYear": 4,
+   "annualizedYield": 5.493786788750818,
+   "yieldBasis": "最近一次配息",
+   "aumBillionTwd": 2,
+   "hasIncomeEqualization": false,
+   "equalizationBasis": "官方收益分配條款",
+   "sourceUrl": "https://www.twse.com.tw/zh/ETFortune-institute/etfInfo/00771"
   },
   {
    "code": "00878",
    "name": "國泰永續高股息",
    "issuer": "國泰證券投資信託股份有限公司",
+   "region": "國內",
+   "regionDetail": "國內成分證券",
    "price": 33.76,
    "closeDate": "2026-09-01",
    "latestDividend": {
@@ -166,12 +251,37 @@
    "aumBillionTwd": 6301,
    "hasIncomeEqualization": true,
    "equalizationBasis": "官方收益分配條款",
-   "sourceUrl": "https://wwwc.twse.com.tw/zh/ETFortune-institute/etfInfo/00878"
+   "sourceUrl": "https://www.twse.com.tw/zh/ETFortune-institute/etfInfo/00878"
+  },
+  {
+   "code": "00882",
+   "name": "中信中國高股息",
+   "issuer": "中國信託證券投資信託股份有限公司",
+   "region": "國外",
+   "regionDetail": "中國",
+   "price": 14.93,
+   "closeDate": "2026-09-01",
+   "latestDividend": {
+    "amount": 0.55,
+    "exDate": "2026-07-16"
+   },
+   "nextDividend": null,
+   "frequency": "半年配",
+   "frequencyBasis": "近次實際配息間隔",
+   "paymentsPerYear": 2,
+   "annualizedYield": 7.367716008037509,
+   "yieldBasis": "最近一次配息",
+   "aumBillionTwd": 295,
+   "hasIncomeEqualization": true,
+   "equalizationBasis": "官方收益分配條款",
+   "sourceUrl": "https://www.twse.com.tw/zh/ETFortune-institute/etfInfo/00882"
   },
   {
    "code": "00900",
    "name": "富邦特選高股息30",
    "issuer": "富邦證券投資信託股份有限公司",
+   "region": "國內",
+   "regionDetail": "國內成分證券",
    "price": 19.54,
    "closeDate": "2026-09-01",
    "latestDividend": {
@@ -187,12 +297,14 @@
    "aumBillionTwd": 303,
    "hasIncomeEqualization": true,
    "equalizationBasis": "官方收益分配條款",
-   "sourceUrl": "https://wwwc.twse.com.tw/zh/ETFortune-institute/etfInfo/00900"
+   "sourceUrl": "https://www.twse.com.tw/zh/ETFortune-institute/etfInfo/00900"
   },
   {
    "code": "00907",
    "name": "永豐優息存股",
    "issuer": "永豐證券投資信託股份有限公司",
+   "region": "國內",
+   "regionDetail": "國內成分證券",
    "price": 17.4,
    "closeDate": "2026-09-01",
    "latestDividend": {
@@ -208,12 +320,14 @@
    "aumBillionTwd": 26,
    "hasIncomeEqualization": true,
    "equalizationBasis": "官方收益分配條款",
-   "sourceUrl": "https://wwwc.twse.com.tw/zh/ETFortune-institute/etfInfo/00907"
+   "sourceUrl": "https://www.twse.com.tw/zh/ETFortune-institute/etfInfo/00907"
   },
   {
    "code": "00915",
    "name": "凱基優選高股息30",
    "issuer": "凱基證券投資信託股份有限公司",
+   "region": "國內",
+   "regionDetail": "國內成分證券",
    "price": 32.38,
    "closeDate": "2026-09-01",
    "latestDividend": {
@@ -229,12 +343,14 @@
    "aumBillionTwd": 164,
    "hasIncomeEqualization": true,
    "equalizationBasis": "官方收益分配條款",
-   "sourceUrl": "https://wwwc.twse.com.tw/zh/ETFortune-institute/etfInfo/00915"
+   "sourceUrl": "https://www.twse.com.tw/zh/ETFortune-institute/etfInfo/00915"
   },
   {
    "code": "00918",
    "name": "大華優利高填息30",
    "issuer": "大華銀證券投資信託股份有限公司",
+   "region": "國內",
+   "regionDetail": "國內成分證券",
    "price": 35.29,
    "closeDate": "2026-09-01",
    "latestDividend": {
@@ -250,12 +366,14 @@
    "aumBillionTwd": 1178,
    "hasIncomeEqualization": true,
    "equalizationBasis": "官方收益分配條款",
-   "sourceUrl": "https://wwwc.twse.com.tw/zh/ETFortune-institute/etfInfo/00918"
+   "sourceUrl": "https://www.twse.com.tw/zh/ETFortune-institute/etfInfo/00918"
   },
   {
    "code": "00919",
    "name": "群益台灣精選高息",
    "issuer": "群益證券投資信託股份有限公司",
+   "region": "國內",
+   "regionDetail": "國內成分證券",
    "price": 32.31,
    "closeDate": "2026-09-01",
    "latestDividend": {
@@ -271,12 +389,14 @@
    "aumBillionTwd": 5816,
    "hasIncomeEqualization": true,
    "equalizationBasis": "官方收益分配條款",
-   "sourceUrl": "https://wwwc.twse.com.tw/zh/ETFortune-institute/etfInfo/00919"
+   "sourceUrl": "https://www.twse.com.tw/zh/ETFortune-institute/etfInfo/00919"
   },
   {
    "code": "00929",
    "name": "復華台灣科技優息",
    "issuer": "復華證券投資信託股份有限公司",
+   "region": "國內",
+   "regionDetail": "國內成分證券",
    "price": 29.46,
    "closeDate": "2026-09-01",
    "latestDividend": {
@@ -292,12 +412,14 @@
    "aumBillionTwd": 1473,
    "hasIncomeEqualization": true,
    "equalizationBasis": "官方收益分配條款",
-   "sourceUrl": "https://wwwc.twse.com.tw/zh/ETFortune-institute/etfInfo/00929"
+   "sourceUrl": "https://www.twse.com.tw/zh/ETFortune-institute/etfInfo/00929"
   },
   {
    "code": "00930",
    "name": "永豐ESG低碳高息",
    "issuer": "永豐證券投資信託股份有限公司",
+   "region": "國內",
+   "regionDetail": "國內成分證券",
    "price": 24.24,
    "closeDate": "2026-09-01",
    "latestDividend": {
@@ -313,12 +435,14 @@
    "aumBillionTwd": 31,
    "hasIncomeEqualization": true,
    "equalizationBasis": "官方收益分配條款",
-   "sourceUrl": "https://wwwc.twse.com.tw/zh/ETFortune-institute/etfInfo/00930"
+   "sourceUrl": "https://www.twse.com.tw/zh/ETFortune-institute/etfInfo/00930"
   },
   {
    "code": "00932",
    "name": "兆豐永續高息等權",
    "issuer": "兆豐國際證券投資信託股份有限公司",
+   "region": "國內",
+   "regionDetail": "國內成分證券",
    "price": 17.61,
    "closeDate": "2026-09-01",
    "latestDividend": {
@@ -334,12 +458,14 @@
    "aumBillionTwd": 20,
    "hasIncomeEqualization": true,
    "equalizationBasis": "官方收益分配條款",
-   "sourceUrl": "https://wwwc.twse.com.tw/zh/ETFortune-institute/etfInfo/00932"
+   "sourceUrl": "https://www.twse.com.tw/zh/ETFortune-institute/etfInfo/00932"
   },
   {
    "code": "00934",
    "name": "中信成長高股息",
    "issuer": "中國信託證券投資信託股份有限公司",
+   "region": "國內",
+   "regionDetail": "國內成分證券",
    "price": 30.82,
    "closeDate": "2026-09-01",
    "latestDividend": {
@@ -355,12 +481,14 @@
    "aumBillionTwd": 127,
    "hasIncomeEqualization": true,
    "equalizationBasis": "官方收益分配條款",
-   "sourceUrl": "https://wwwc.twse.com.tw/zh/ETFortune-institute/etfInfo/00934"
+   "sourceUrl": "https://www.twse.com.tw/zh/ETFortune-institute/etfInfo/00934"
   },
   {
    "code": "00936",
    "name": "台新永續高息中小",
    "issuer": "台新證券投資信託股份有限公司",
+   "region": "國內",
+   "regionDetail": "國內成分證券",
    "price": 21.61,
    "closeDate": "2026-09-01",
    "latestDividend": {
@@ -376,12 +504,14 @@
    "aumBillionTwd": 42,
    "hasIncomeEqualization": true,
    "equalizationBasis": "官方收益分配條款",
-   "sourceUrl": "https://wwwc.twse.com.tw/zh/ETFortune-institute/etfInfo/00936"
+   "sourceUrl": "https://www.twse.com.tw/zh/ETFortune-institute/etfInfo/00936"
   },
   {
    "code": "00939",
    "name": "統一台灣高息動能",
    "issuer": "統一證券投資信託股份有限公司",
+   "region": "國內",
+   "regionDetail": "國內成分證券",
    "price": 23.26,
    "closeDate": "2026-09-01",
    "latestDividend": {
@@ -397,12 +527,14 @@
    "aumBillionTwd": 271,
    "hasIncomeEqualization": true,
    "equalizationBasis": "官方收益分配條款",
-   "sourceUrl": "https://wwwc.twse.com.tw/zh/ETFortune-institute/etfInfo/00939"
+   "sourceUrl": "https://www.twse.com.tw/zh/ETFortune-institute/etfInfo/00939"
   },
   {
    "code": "00940",
    "name": "元大台灣價值高息",
    "issuer": "元大證券投資信託股份有限公司",
+   "region": "國內",
+   "regionDetail": "國內成分證券",
    "price": 12.93,
    "closeDate": "2026-09-01",
    "latestDividend": {
@@ -418,12 +550,14 @@
    "aumBillionTwd": 673,
    "hasIncomeEqualization": true,
    "equalizationBasis": "官方收益分配條款",
-   "sourceUrl": "https://wwwc.twse.com.tw/zh/ETFortune-institute/etfInfo/00940"
+   "sourceUrl": "https://www.twse.com.tw/zh/ETFortune-institute/etfInfo/00940"
   },
   {
    "code": "00943",
    "name": "兆豐電子高息等權",
    "issuer": "兆豐國際證券投資信託股份有限公司",
+   "region": "國內",
+   "regionDetail": "國內成分證券",
    "price": 21.45,
    "closeDate": "2026-09-01",
    "latestDividend": {
@@ -439,12 +573,14 @@
    "aumBillionTwd": 9,
    "hasIncomeEqualization": true,
    "equalizationBasis": "官方收益分配條款",
-   "sourceUrl": "https://wwwc.twse.com.tw/zh/ETFortune-institute/etfInfo/00943"
+   "sourceUrl": "https://www.twse.com.tw/zh/ETFortune-institute/etfInfo/00943"
   },
   {
    "code": "00944",
    "name": "野村趨勢動能高息",
    "issuer": "野村證券投資信託股份有限公司",
+   "region": "國內",
+   "regionDetail": "國內成分證券",
    "price": 21.25,
    "closeDate": "2026-09-01",
    "latestDividend": {
@@ -460,12 +596,14 @@
    "aumBillionTwd": 11,
    "hasIncomeEqualization": true,
    "equalizationBasis": "官方收益分配條款",
-   "sourceUrl": "https://wwwc.twse.com.tw/zh/ETFortune-institute/etfInfo/00944"
+   "sourceUrl": "https://www.twse.com.tw/zh/ETFortune-institute/etfInfo/00944"
   },
   {
    "code": "00946",
    "name": "群益科技高息成長",
    "issuer": "群益證券投資信託股份有限公司",
+   "region": "國內",
+   "regionDetail": "國內成分證券",
    "price": 15.74,
    "closeDate": "2026-09-01",
    "latestDividend": {
@@ -484,12 +622,37 @@
    "aumBillionTwd": 70,
    "hasIncomeEqualization": true,
    "equalizationBasis": "官方收益分配條款",
-   "sourceUrl": "https://wwwc.twse.com.tw/zh/ETFortune-institute/etfInfo/00946"
+   "sourceUrl": "https://www.twse.com.tw/zh/ETFortune-institute/etfInfo/00946"
+  },
+  {
+   "code": "00956",
+   "name": "中信日經高股息",
+   "issuer": "中國信託證券投資信託股份有限公司",
+   "region": "國外",
+   "regionDetail": "日本",
+   "price": 13.56,
+   "closeDate": "2026-09-01",
+   "latestDividend": {
+    "amount": 0.3,
+    "exDate": "2026-07-16"
+   },
+   "nextDividend": null,
+   "frequency": "季配",
+   "frequencyBasis": "近次實際配息間隔",
+   "paymentsPerYear": 4,
+   "annualizedYield": 8.849557522123893,
+   "yieldBasis": "最近一次配息",
+   "aumBillionTwd": 4,
+   "hasIncomeEqualization": true,
+   "equalizationBasis": "官方收益分配條款",
+   "sourceUrl": "https://www.twse.com.tw/zh/ETFortune-institute/etfInfo/00956"
   },
   {
    "code": "00961",
    "name": "FT臺灣永續高息",
    "issuer": "富蘭克林華美證券投資信託股份有限公司",
+   "region": "國內",
+   "regionDetail": "國內成分證券",
    "price": 13.29,
    "closeDate": "2026-09-01",
    "latestDividend": {
@@ -505,12 +668,14 @@
    "aumBillionTwd": 103,
    "hasIncomeEqualization": true,
    "equalizationBasis": "官方收益分配條款",
-   "sourceUrl": "https://wwwc.twse.com.tw/zh/ETFortune-institute/etfInfo/00961"
+   "sourceUrl": "https://www.twse.com.tw/zh/ETFortune-institute/etfInfo/00961"
   },
   {
    "code": "00962",
    "name": "台新AI優息動能",
    "issuer": "台新證券投資信託股份有限公司",
+   "region": "國內",
+   "regionDetail": "國內成分證券",
    "price": 15.6,
    "closeDate": "2026-09-01",
    "latestDividend": {
@@ -526,12 +691,83 @@
    "aumBillionTwd": 9,
    "hasIncomeEqualization": true,
    "equalizationBasis": "官方收益分配條款",
-   "sourceUrl": "https://wwwc.twse.com.tw/zh/ETFortune-institute/etfInfo/00962"
+   "sourceUrl": "https://www.twse.com.tw/zh/ETFortune-institute/etfInfo/00962"
+  },
+  {
+   "code": "00963",
+   "name": "中信全球高股息",
+   "issuer": "中國信託證券投資信託股份有限公司",
+   "region": "國外",
+   "regionDetail": "全球",
+   "price": 13.08,
+   "closeDate": "2026-09-01",
+   "latestDividend": {
+    "amount": 0.1,
+    "exDate": "2026-08-18"
+   },
+   "nextDividend": null,
+   "frequency": "月配",
+   "frequencyBasis": "官方收益分配條款",
+   "paymentsPerYear": 12,
+   "annualizedYield": 9.174311926605506,
+   "yieldBasis": "最近一次配息",
+   "aumBillionTwd": 15,
+   "hasIncomeEqualization": true,
+   "equalizationBasis": "官方收益分配條款",
+   "sourceUrl": "https://www.twse.com.tw/zh/ETFortune-institute/etfInfo/00963"
+  },
+  {
+   "code": "00964",
+   "name": "中信亞太高股息",
+   "issuer": "中國信託證券投資信託股份有限公司",
+   "region": "國外",
+   "regionDetail": "亞太",
+   "price": 14.94,
+   "closeDate": "2026-09-01",
+   "latestDividend": {
+    "amount": 0.12,
+    "exDate": "2026-08-18"
+   },
+   "nextDividend": null,
+   "frequency": "月配",
+   "frequencyBasis": "官方收益分配條款",
+   "paymentsPerYear": 12,
+   "annualizedYield": 9.63855421686747,
+   "yieldBasis": "最近一次配息",
+   "aumBillionTwd": 10,
+   "hasIncomeEqualization": true,
+   "equalizationBasis": "官方收益分配條款",
+   "sourceUrl": "https://www.twse.com.tw/zh/ETFortune-institute/etfInfo/00964"
+  },
+  {
+   "code": "00972",
+   "name": "野村日本動能高息",
+   "issuer": "野村證券投資信託股份有限公司",
+   "region": "國外",
+   "regionDetail": "日本",
+   "price": 22.09,
+   "closeDate": "2026-09-01",
+   "latestDividend": {
+    "amount": 0.22,
+    "exDate": "2026-06-16"
+   },
+   "nextDividend": null,
+   "frequency": "季配",
+   "frequencyBasis": "官方收益分配條款",
+   "paymentsPerYear": 4,
+   "annualizedYield": 3.9837030330466274,
+   "yieldBasis": "最近一次配息",
+   "aumBillionTwd": 3,
+   "hasIncomeEqualization": true,
+   "equalizationBasis": "官方收益分配條款",
+   "sourceUrl": "https://www.twse.com.tw/zh/ETFortune-institute/etfInfo/00972"
   },
   {
    "code": "00984A",
    "name": "主動安聯台灣高息",
    "issuer": "安聯證券投資信託股份有限公司",
+   "region": "國內",
+   "regionDetail": "國內成分證券",
    "price": 15.9,
    "closeDate": "2026-09-01",
    "latestDividend": {
@@ -547,12 +783,14 @@
    "aumBillionTwd": 101,
    "hasIncomeEqualization": true,
    "equalizationBasis": "官方收益分配條款",
-   "sourceUrl": "https://wwwc.twse.com.tw/zh/ETFortune-institute/etfInfo/00984A"
+   "sourceUrl": "https://www.twse.com.tw/zh/ETFortune-institute/etfInfo/00984A"
   },
   {
    "code": "00999A",
    "name": "主動野村臺灣高息",
    "issuer": "野村證券投資信託股份有限公司",
+   "region": "國內",
+   "regionDetail": "國內成分證券",
    "price": 11.62,
    "closeDate": "2026-09-01",
    "latestDividend": null,
@@ -565,12 +803,12 @@
    "aumBillionTwd": 115,
    "hasIncomeEqualization": true,
    "equalizationBasis": "官方收益分配條款",
-   "sourceUrl": "https://wwwc.twse.com.tw/zh/ETFortune-institute/etfInfo/00999A"
+   "sourceUrl": "https://www.twse.com.tw/zh/ETFortune-institute/etfInfo/00999A"
   }
  ],
  "sources": {
-  "scope": "https://wwwc.twse.com.tw/zh/ETFortune-institute/products?tag=%E9%AB%98%E8%82%A1%E6%81%AF",
-  "dividends": "https://wwwc.twse.com.tw/zh/ETFortune-institute/dividendList",
+  "scope": "https://www.twse.com.tw/zh/ETFortune-institute/products?tag=%E9%AB%98%E8%82%A1%E6%81%AF",
+  "dividends": "https://www.twse.com.tw/zh/ETFortune-institute/dividendList",
   "prices": "https://www.twse.com.tw/zh/trading/historical/mi-index.html"
  }
 }
