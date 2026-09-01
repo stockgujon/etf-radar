@@ -56,6 +56,26 @@ jobs:
           };
           const TITLE_CONFIRMED_EQUALIZATION = new Set(['00405A', '00999A']);
 
+          // 國外成分股 ETF 的投資地區提示（只用來顯示，判斷「國內／國外」一律以證交所官方清單為準）
+          const FOREIGN_REGION_HINTS = [
+            [/美國|US\b|標普|S&P|那斯達克|費城/i, '美國'],
+            [/日本|日經/, '日本'],
+            [/中國|恒生|滬深|A股/, '中國'],
+            [/亞太/, '亞太'],
+            [/歐洲/, '歐洲'],
+            [/印度/, '印度'],
+            [/越南/, '越南'],
+            [/全球|世界/, '全球'],
+          ];
+
+          function resolveRegion(code, name, domesticCodes) {
+            if (domesticCodes.has(code)) return { region: '國內', regionDetail: '國內成分證券' };
+            for (const [pattern, label] of FOREIGN_REGION_HINTS) {
+              if (pattern.test(name)) return { region: '國外', regionDetail: label };
+            }
+            return { region: '國外', regionDetail: '國外成分證券' };
+          }
+
           function cleanText(value) {
             return String(value == null ? '' : value)
               .replace(/<[^>]+>/g, ' ')
@@ -232,16 +252,15 @@ jobs:
             ]);
 
             const domesticCodes = new Set([...domesticPassive, ...domesticActive]);
+            // 清單收錄兩個主題分類的全部商品（含投資國外者），國內／國外改用「投資地區」欄位標示
             const productsByCode = new Map(
-              [...highDividend, ...highLowVol]
-                .filter((item) => domesticCodes.has(item.stockNo))
-                .map((item) => [item.stockNo, item]),
+              [...highDividend, ...highLowVol].map((item) => [item.stockNo, item]),
             );
             const closesByCode = new Map(dailyCloses.map((row) => [row.code, row]));
             const trackedCodes = [...productsByCode.keys()]
               .filter((code) => closesByCode.has(code))
               .sort((a, b) => a.localeCompare(b));
-            if (!trackedCodes.length) throw new Error('官方分類暫時沒有可用的國內高息 ETF 商品');
+            if (!trackedCodes.length) throw new Error('官方分類暫時沒有可用的高息 ETF 商品');
 
             const trackedCodeSet = new Set(trackedCodes);
             const dividendRows = parseDividendRows(dividendHtml).filter((row) => trackedCodeSet.has(row.code));
@@ -262,6 +281,7 @@ jobs:
               const latestDividend = records.find((row) => row.exDate <= today && row.amount !== null) || null;
               const description = (records.find((row) => row.description) || {}).description || '';
               const frequency = FREQUENCY_OVERRIDES[code] || inferFrequency(records, description);
+              const placement = resolveRegion(code, product.stockName, domesticCodes);
               const yieldDividend = nextDividend || latestDividend;
               const annualizedYield = yieldDividend && yieldDividend.amount != null && price > 0
                 ? (yieldDividend.amount * frequency.times / price) * 100
@@ -271,6 +291,8 @@ jobs:
                 code,
                 name: String(product.stockName).replace(/\(原簡稱:[^)]+\)/, '').trim(),
                 issuer: product.issuer,
+                region: placement.region,
+                regionDetail: placement.regionDetail,
                 price,
                 closeDate: dailyClose.date,
                 latestDividend: latestDividend ? { amount: latestDividend.amount, exDate: latestDividend.exDate } : null,
@@ -292,7 +314,7 @@ jobs:
             return {
               asOf: new Date().toISOString(),
               marketStatus: '收盤',
-              scope: '每次同步依證交所「高股息」與「高息低波動」主題分類重建，並與國內成分股及國內主動式 ETF 官方清單取交集',
+              scope: '每次同步依證交所「高股息」與「高息低波動」主題分類重建，收錄該分類下的全部臺灣掛牌 ETF；再與證交所「國內成分證券 ETF」及「國內主動式 ETF」官方清單比對，標示每一檔的投資地區。',
               etfs,
               sources: {
                 scope: `${TWSE}/zh/ETFortune-institute/products?tag=${encodeURIComponent('高股息')}`,
