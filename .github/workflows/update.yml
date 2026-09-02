@@ -236,9 +236,11 @@ jobs:
              不會影響其他資料，也不會讓整個排程失敗。
           ------------------------------------------------------------------ */
           const ANNOUNCEMENT_PAGE_SIZE = 100;   // 每頁請求筆數（證交所若不接受會自動退回較小值）
-          const ANNOUNCEMENT_MAX_PAGES = 30;    // 最多翻幾頁（碰到超過保留天數的公告就提早停）
+          const ANNOUNCEMENT_MAX_PAGES = 40;    // 最多翻幾頁（碰到超過保留天數的公告就提早停）
           const ANNOUNCEMENT_MAX_AGE_DAYS = 45; // 只看最近幾天內的公告
-          const ANNOUNCEMENT_MAX_DETAILS = 60;  // 最多點開幾則公告內文
+          const ANNOUNCEMENT_MAX_DETAILS = 90;  // 最多點開幾則公告內文
+          const ANNOUNCEMENT_TRIES_PER_FUND = 3; // 每檔最多回溯幾則公告
+          const ANNOUNCEMENT_GAP_MS = 200;      // 連續請求之間的間隔，避免對證交所造成瞬間壓力
 
           /* 公告內文裡描述配息金額的寫法各家投信都不一樣，實際看過的差異包括：
                凱基      每受益權單位「預計」配發金額為新「臺」幣0.60元
@@ -260,8 +262,8 @@ jobs:
             return `${year}-${match[2].padStart(2, '0')}-${match[3].padStart(2, '0')}`;
           }
 
-          // 列表頁：每一列的 onclick 網址裡就帶了 fund=<股票代號> 與 date=<公告日>，
-          // 不必去猜基金全名對應哪一檔，直接取用。
+          // 列表頁：每一列的 onclick 網址裡就帶了 fund=<股票代號>、date=<公告日> 與 type=<分類>，
+          // 不必去猜基金全名對應哪一檔，也不必依賴伺服器端的分類篩選，直接取用。
           function parseAnnouncementList(html) {
             const items = [];
             const pattern = /document\.location = '([^']*\/zh\/ETFortune\/announcement\?[^']+)'/g;
@@ -269,10 +271,12 @@ jobs:
               const href = match[1].replace(/&amp;/g, '&');
               const fund = /[?&]fund=([^&]*)/.exec(href);
               const date = /[?&]date=(\d{8})/.exec(href);
+              const type = /[?&]type=([^&]*)/.exec(href);
               if (!fund || !fund[1] || !date) continue;
               items.push({
                 code: decodeURIComponent(fund[1]).trim(),
                 announcedOn: `${date[1].slice(0, 4)}-${date[1].slice(4, 6)}-${date[1].slice(6, 8)}`,
+                type: type ? decodeURIComponent(type[1]).trim() : '',
                 href,
               });
             }
@@ -311,15 +315,22 @@ jobs:
             return Math.abs(new Date(`${isoA}T00:00:00Z`) - new Date(`${isoB}T00:00:00Z`)) / 86400000;
           }
 
-          // 掃描收益分配公告，回傳 Map<代號, { exDate, amount, announcedOn }>
+          /* 掃描收益分配公告，回傳 Map<代號, { exDate, amount, announcedOn }>
+
+             這裡刻意「不」用網址上的 type=distribution 去讓伺服器幫忙篩選 —— 實測發現帶了
+             分類參數之後，同一天的公告不一定會全部出現在前面幾頁（例如台新的兩檔就掃不到）。
+             改成抓不分類的完整列表，再用每一列自己網址裡的 type 來判斷是不是收益分配，
+             結果比較完整，判斷依據也不依賴伺服器端的排序行為。 */
           async function fetchAnnouncedDividends(trackedCodes, today) {
             const wanted = new Set(trackedCodes);
-            const newestByCode = new Map();
+            const candidatesByCode = new Map();   // 代號 -> 由新到舊的收益分配公告
             let offset = 0;
+            let pagesRead = 0;
+            let rowsSeen = 0;
 
             for (let page = 0; page < ANNOUNCEMENT_MAX_PAGES; page += 1) {
               const attempt = await tryHosts(
-                `/zh/ETFortune/announcementList?type=distribution&max=${ANNOUNCEMENT_PAGE_SIZE}&offset=${offset}`,
+                `/zh/ETFortune/announcementList?max=${ANNOUNCEMENT_PAGE_SIZE}&offset=${offset}`,
                 undefined,
                 async (response) => {
                   const html = await response.text();
@@ -330,35 +341,57 @@ jobs:
               const items = attempt.value;
               if (!items) break;
 
+              pagesRead += 1;
+              rowsSeen += items.length;
               let reachedOldEnough = false;
               for (const item of items) {
                 if (daysBetween(item.announcedOn, today) > ANNOUNCEMENT_MAX_AGE_DAYS) { reachedOldEnough = true; continue; }
-                // 列表由新到舊，因此每一檔第一次出現的就是最新的一則公告
-                if (wanted.has(item.code) && !newestByCode.has(item.code)) newestByCode.set(item.code, item);
+                if (!wanted.has(item.code)) continue;
+                // 分類標記只拿來排順序，不拿來排除。實測發現同一則收益分配公告，
+                // 在不同列表下不一定都被標成 distribution，若拿它當門檻就會漏掉。
+                const list = candidatesByCode.get(item.code) || [];
+                if (list.length < ANNOUNCEMENT_TRIES_PER_FUND) {
+                  list.push(item);                 // 列表由新到舊，先進來的就是比較新的
+                  candidatesByCode.set(item.code, list);
+                }
               }
 
               offset += items.length;
-              if (reachedOldEnough || newestByCode.size >= wanted.size) break;
+              if (reachedOldEnough) break;
             }
 
             const announced = new Map();
             let opened = 0;
-            for (const [code, item] of newestByCode) {
-              if (opened >= ANNOUNCEMENT_MAX_DETAILS) break;
-              opened += 1;
-              const attempt = await tryHosts(item.href, undefined, async (response) => {
-                const detail = parseAnnouncementDetail(await response.text());
-                return detail.exDate ? detail : null;
-              });
-              const detail = attempt.value;
-              if (!detail) { console.warn(`公告讀取失敗，略過：${code}`); continue; }
-              if (detail.amount === null) {
-                if (!detail.declined) console.warn(`公告解析不到配發金額（可能是新的用詞），略過：${code} ${item.href}`);
-                continue;
+            for (const [code, list] of candidatesByCode) {
+              // 標成收益分配的先試（通常一次就中），其餘的當備援，順序仍維持由新到舊
+              const ordered = [
+                ...list.filter((item) => item.type === 'distribution'),
+                ...list.filter((item) => item.type !== 'distribution'),
+              ];
+              for (const item of ordered) {        // 最新那則若解析不出未來除息日，再回溯前一則
+                if (opened >= ANNOUNCEMENT_MAX_DETAILS) break;
+                opened += 1;
+                await sleep(ANNOUNCEMENT_GAP_MS);
+                const attempt = await tryHosts(item.href, undefined, async (response) => {
+                  const detail = parseAnnouncementDetail(await response.text());
+                  return detail.exDate || detail.declined ? detail : null;
+                });
+                const detail = attempt.value;
+                if (!detail) { console.warn(`公告讀取失敗，略過：${code}`); continue; }
+                if (detail.declined) continue;                        // 本次不予分配
+                if (detail.amount === null) {
+                  // 只有「看起來就是配息公告卻讀不到金額」才示警，避免其他分類的公告洗版
+                  if (item.type === 'distribution' || detail.exDate) {
+                    console.warn(`公告解析不到配發金額（可能是新的用詞），略過：${code} ${item.href}`);
+                  }
+                  continue;
+                }
+                if (!(detail.exDate > today)) continue;               // 只要還沒除息的
+                announced.set(code, { ...detail, announcedOn: item.announcedOn });
+                break;
               }
-              if (!(detail.exDate > today)) continue;               // 只要還沒除息的
-              announced.set(code, { ...detail, announcedOn: item.announcedOn });
             }
+            console.log(`收益分配公告：讀了 ${pagesRead} 頁共 ${rowsSeen} 則，命中 ${candidatesByCode.size} 檔，點開 ${opened} 則`);
             return announced;
           }
 
