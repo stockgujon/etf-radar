@@ -240,11 +240,17 @@ jobs:
           const ANNOUNCEMENT_MAX_AGE_DAYS = 45; // 只看最近幾天內的公告
           const ANNOUNCEMENT_MAX_DETAILS = 60;  // 最多點開幾則公告內文
 
-          // 公告內文裡描述配息金額的寫法各家投信不同，逐一嘗試；都不符合就放棄，不硬猜。
+          /* 公告內文裡描述配息金額的寫法各家投信都不一樣，實際看過的差異包括：
+               凱基      每受益權單位「預計」配發金額為新「臺」幣0.60元
+               富蘭克林   每受益權單位「預估」配發金額為新「台」幣0.19 元   ← 數字與「元」之間有空格
+               台新      每受益權單<br>位預估配發金額為新臺幣0.25元        ← 句子中間被 <br> 切開
+             因此比對前一律先把所有空白（含 <br> 造成的換行）去掉，中文不需要空白也讀得通，
+             這樣斷行就不會把「單位」拆成「單」「位」而比對失敗。
+             仍然都不符合就放棄該檔，不硬猜數字。 */
           const ANNOUNCEMENT_AMOUNT_PATTERNS = [
-            /每受益權單位預計配發金額為新臺幣\s*([0-9]+(?:\.[0-9]+)?)\s*元/,
-            /每一?受益權單位(?:之|的)?(?:預計|實際)?(?:可)?(?:配發|分配|發放)(?:之)?金額[^0-9]{0,24}([0-9]+(?:\.[0-9]+)?)\s*元/,
-            /每一?受益權單位[^。\n]{0,24}?新臺幣\s*([0-9]+(?:\.[0-9]+)?)\s*元/,
+            /每一?受益權單位(?:之|的)?(?:預計|預估|預定|實際)?(?:可)?(?:配發|分配|發放)(?:之)?金額(?:為)?(?:新[臺台]幣)?([0-9]+(?:\.[0-9]+)?)元/,
+            /每一?受益權單位[^。；]{0,30}?(?:配發|分配|發放)[^。；]{0,12}?金額[^。；0-9]{0,16}([0-9]+(?:\.[0-9]+)?)元/,
+            /每一?受益權單位[^。；]{0,30}?新[臺台]幣([0-9]+(?:\.[0-9]+)?)元/,
           ];
 
           function rocSlashDateToIso(value) {
@@ -275,25 +281,30 @@ jobs:
 
           // 公告內文：取出「除息交易日」與「每受益權單位預計配發金額」
           function parseAnnouncementDetail(html) {
-            const text = html
-              .replace(/<br\s*\/?>/gi, '\n')
-              .replace(/<[^>]+>/g, ' ')
-              .replace(/&nbsp;|&#160;/g, ' ')
+            // 去標籤後再把所有空白拿掉，避免 <br> 把中文詞句從中間切斷導致比對失敗
+            const compact = html
+              .replace(/<br\s*\/?>/gi, '')
+              .replace(/<[^>]+>/g, '')
+              .replace(/&nbsp;|&#160;/g, '')
               .replace(/&amp;/g, '&')
-              .replace(/[ \t]+/g, ' ');
+              .replace(/\s+/g, '');
 
-            const exDateMatch = /除息交易日\s*[:：]?\s*([0-9]{2,3}\s*[\/\-年]\s*[0-9]{1,2}\s*[\/\-月]\s*[0-9]{1,2})/.exec(text);
-            const exDate = exDateMatch ? rocSlashDateToIso(exDateMatch[1]) : null;
+            const exDateMatch = /除息交易日[:：]?([0-9]{2,3})[\/\-年]([0-9]{1,2})[\/\-月]([0-9]{1,2})/.exec(compact);
+            const exDate = exDateMatch
+              ? `${Number(exDateMatch[1]) + 1911}-${exDateMatch[2].padStart(2, '0')}-${exDateMatch[3].padStart(2, '0')}`
+              : null;
 
             let amount = null;
             for (const pattern of ANNOUNCEMENT_AMOUNT_PATTERNS) {
-              const match = pattern.exec(text);
+              const match = pattern.exec(compact);
               if (match) {
                 const value = Number(match[1]);
                 if (Number.isFinite(value) && value > 0) { amount = value; break; }
               }
             }
-            return { exDate, amount };
+            // 明確表示這次不分配的公告，不算解析失敗
+            const declined = /不予分配|不進行(?:收益)?分配/.test(compact);
+            return { exDate, amount, declined };
           }
 
           function daysBetween(isoA, isoB) {
@@ -340,7 +351,11 @@ jobs:
                 return detail.exDate ? detail : null;
               });
               const detail = attempt.value;
-              if (!detail || detail.amount === null) continue;      // 例如「不予分配」的公告
+              if (!detail) { console.warn(`公告讀取失敗，略過：${code}`); continue; }
+              if (detail.amount === null) {
+                if (!detail.declined) console.warn(`公告解析不到配發金額（可能是新的用詞），略過：${code} ${item.href}`);
+                continue;
+              }
               if (!(detail.exDate > today)) continue;               // 只要還沒除息的
               announced.set(code, { ...detail, announcedOn: item.announcedOn });
             }
