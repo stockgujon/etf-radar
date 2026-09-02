@@ -240,7 +240,7 @@ jobs:
           const ANNOUNCEMENT_MAX_AGE_DAYS = 45; // 只看最近幾天內的公告
           const ANNOUNCEMENT_MAX_DETAILS = 90;  // 最多點開幾則公告內文
           const ANNOUNCEMENT_KEEP_DISTRIBUTION = 2; // 每檔保留幾則「標為收益分配」的公告
-          const ANNOUNCEMENT_KEEP_OTHER = 1;        // 每檔額外保留幾則其他分類的公告當備援
+          const ANNOUNCEMENT_KEEP_OTHER = 2;        // 每檔額外保留幾則其他公告當備援
           const ANNOUNCEMENT_GAP_MS = 200;      // 連續請求之間的間隔，避免對證交所造成瞬間壓力
 
           /* 公告內文裡描述配息金額的寫法各家投信都不一樣，實際看過的差異包括：
@@ -267,17 +267,21 @@ jobs:
           // 不必去猜基金全名對應哪一檔，也不必依賴伺服器端的分類篩選，直接取用。
           function parseAnnouncementList(html) {
             const items = [];
-            const pattern = /document\.location = '([^']*\/zh\/ETFortune\/announcement\?[^']+)'/g;
+            const pattern = /<tr onclick="document\.location = '([^']*\/zh\/ETFortune\/announcement\?[^']+)';">([\s\S]*?)<\/tr>/g;
             for (const match of html.matchAll(pattern)) {
               const href = match[1].replace(/&amp;/g, '&');
               const fund = /[?&]fund=([^&]*)/.exec(href);
               const date = /[?&]date=(\d{8})/.exec(href);
               const type = /[?&]type=([^&]*)/.exec(href);
               if (!fund || !fund[1] || !date) continue;
+              // 除了網址上的分類參數，也看這一列本身的文字（消息分類欄與標題）。
+              // 兩者只要有一個看得出是收益分配，就當成配息公告處理。
+              const rowText = cleanText(match[2] || '');
               items.push({
                 code: decodeURIComponent(fund[1]).trim(),
                 announcedOn: `${date[1].slice(0, 4)}-${date[1].slice(4, 6)}-${date[1].slice(6, 8)}`,
                 type: type ? decodeURIComponent(type[1]).trim() : '',
+                isDistribution: (type && type[1] === 'distribution') || /收益分配|收益分派/.test(rowText),
                 href,
               });
             }
@@ -352,7 +356,7 @@ jobs:
                    標為收益分配的另外留位子，否則像 00940 這種公告很頻繁的基金，
                    配息公告會被幾則較新的其他公告擠掉。列表由新到舊，先進來的就是比較新的。 */
                 const buckets = candidatesByCode.get(item.code) || { primary: [], fallback: [] };
-                if (item.type === 'distribution') {
+                if (item.isDistribution) {
                   if (buckets.primary.length < ANNOUNCEMENT_KEEP_DISTRIBUTION) buckets.primary.push(item);
                 } else if (buckets.fallback.length < ANNOUNCEMENT_KEEP_OTHER) {
                   buckets.fallback.push(item);
@@ -380,13 +384,13 @@ jobs:
                 const detail = attempt.value;
                 if (!detail) {
                   // 其他分類的公告本來就常常讀不到內容，不需要示警
-                  if (item.type === 'distribution') console.warn(`收益分配公告讀取失敗，略過：${code} ${item.href}`);
+                  if (item.isDistribution) console.warn(`收益分配公告讀取失敗，略過：${code} ${item.href}`);
                   continue;
                 }
                 if (detail.declined) continue;                        // 本次不予分配
                 if (detail.amount === null) {
                   // 只有「看起來就是配息公告卻讀不到金額」才示警，避免其他分類的公告洗版
-                  if (item.type === 'distribution' || detail.exDate) {
+                  if (item.isDistribution || detail.exDate) {
                     console.warn(`公告解析不到配發金額（可能是新的用詞），略過：${code} ${item.href}`);
                   }
                   continue;
