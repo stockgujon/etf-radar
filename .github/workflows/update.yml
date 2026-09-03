@@ -1,11 +1,14 @@
 name: 更新 ETF 資料
 
 on:
-  # 台北時間每天 09:05、14:05、19:05（GitHub 用 UTC，所以要減 8 小時）
+  # 台北時間每天 09:05、14:05、16:05、19:05、21:05（GitHub 用 UTC，所以要減 8 小時）
+  # 16:05 與 21:05 是備援：GitHub 排程常延遲、偶爾失敗，多兩班確保當天一定補得上
   schedule:
-    - cron: '5 1 * * *'
-    - cron: '5 6 * * *'
-    - cron: '5 11 * * *'
+    - cron: '5 1 * * *'    # 09:05 台北　開盤前
+    - cron: '5 6 * * *'    # 14:05 台北　收盤後第一次
+    - cron: '5 8 * * *'    # 16:05 台北　備援
+    - cron: '5 11 * * *'   # 19:05 台北　晚間主要更新
+    - cron: '5 13 * * *'   # 21:05 台北　備援
   # 讓你可以在 Actions 分頁手動按「Run workflow」立刻抓一次
   workflow_dispatch:
   # 每次改動這個檔案時也抓一次
@@ -52,7 +55,14 @@ jobs:
           const TWSE_HOSTS = ['https://www.twse.com.tw', 'https://wwwc.twse.com.tw'];
           const TWSE = TWSE_HOSTS[0];
           const RETRY_ROUNDS = 3;
-          const RETRY_DELAY_MS = 2000;
+          // 每一輪失敗後等久一點再試，短暫的擋流量或維護通常幾秒到十幾秒就過去了
+          const RETRY_DELAYS_MS = [2000, 6000, 15000];
+          // 帶上可辨識的識別字串。有些防護機制會擋掉沒有標示來源的請求（回 307/403），
+          // 這裡誠實表明是誰、從哪裡來，也方便對方在需要時聯絡。
+          const TWSE_HEADERS = {
+            'user-agent': 'etf-radar/1.0 (+https://stockgujon.github.io/etf-radar/)',
+            'accept-language': 'zh-TW,zh;q=0.9',
+          };
 
           const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -61,7 +71,10 @@ jobs:
             const problems = [];
             for (const host of TWSE_HOSTS) {
               try {
-                const response = await fetch(host + path, init);
+                const response = await fetch(host + path, {
+                  ...(init || {}),
+                  headers: { ...TWSE_HEADERS, ...((init && init.headers) || {}) },
+                });
                 if (!response.ok) { problems.push(`${host} 回應 ${response.status}`); continue; }
                 const value = await validate(response);
                 if (value !== null) return { value, problems };
@@ -80,7 +93,11 @@ jobs:
               const attempt = await tryHosts(path, init, validate);
               if (attempt.value !== null) return attempt.value;
               problems = attempt.problems;
-              if (round < RETRY_ROUNDS - 1) await sleep(RETRY_DELAY_MS);
+              if (round < RETRY_ROUNDS - 1) {
+                const wait = RETRY_DELAYS_MS[round] ?? 15000;
+                console.warn(`${label}第 ${round + 1} 次失敗（${problems.join('；')}），${wait / 1000} 秒後重試`);
+                await sleep(wait);
+              }
             }
             throw new Error(`${label}無法取得（${path}）：${problems.join('；')}`);
           }
