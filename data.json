@@ -1,5 +1,5 @@
 {
- "asOf": "2026-09-04T06:23:28.142Z",
+ "asOf": "2026-09-04T08:23:43.533Z",
  "marketStatus": "收盤",
  "scope": "每次同步依證交所「高股息」與「高息低波動」主題分類重建，收錄該分類下的全部臺灣掛牌 ETF；再與證交所「國內成分證券 ETF」及「國內主動式 ETF」官方清單比對，標示每一檔的投資地區。",
  "etfs": [
@@ -597,13 +597,16 @@
     "amount": 0.05,
     "exDate": "2026-08-11"
    },
-   "nextDividend": null,
-   "nextDividendSource": null,
+   "nextDividend": {
+    "amount": 0.055,
+    "exDate": "2026-09-08"
+   },
+   "nextDividendSource": "證交所配息清單",
    "frequency": "月配",
    "frequencyBasis": "近次實際配息間隔",
    "paymentsPerYear": 12,
-   "annualizedYield": 4.61183704842429,
-   "yieldBasis": "最近一次配息",
+   "annualizedYield": 5.073020753266718,
+   "yieldBasis": "下次已公告配息",
    "aumBillionTwd": 669,
    "hasIncomeEqualization": true,
    "equalizationBasis": "官方收益分配條款",
