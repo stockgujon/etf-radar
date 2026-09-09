@@ -91,7 +91,8 @@ tbody tr:hover { background:#fff7e6; }
 .footerNote a { color:var(--green); font-weight:800; }
 .siteSign { padding:30px max(5vw,24px) 34px; background:var(--ink); color:#f0e2c9; text-align:center; }
 .siteSign b { display:block; font-size:16px; font-weight:700; letter-spacing:.08em; }
-@media (max-width:720px) { .siteSign b { font-size:14px; letter-spacing:.04em; } }
+.siteSign span { display:block; margin-top:10px; color:#c2a97f; font-size:14px; font-weight:500; letter-spacing:.06em; }
+@media (max-width:720px) { .siteSign b { font-size:14px; letter-spacing:.04em; } .siteSign span { font-size:13px; } }
 .sourceBadge,.heroMeta span:nth-child(2),.cards strong,.resultLine,td:nth-child(1),td:nth-child(3),td:nth-child(4),td:nth-child(5),td:nth-child(7),td:nth-child(8) { font-family:"Roboto Mono","Noto Sans TC",Consolas,monospace; font-variant-numeric:tabular-nums; }
 @media (max-width:900px) { .methodGrid { grid-template-columns:1fr; } .footerNote { flex-direction:column; } table { min-width:1320px; } }
 @media (max-width:720px) { .sourceBadge { display:none; } .hero { padding-top:46px; } .cards { grid-template-columns:1fr; } .toolbar { align-items:stretch; flex-direction:column; } .search { max-width:none; } .clearFilters,.refresh { padding:12px; } .panel { width:calc(100% - 24px); padding:14px; } .panelHeading { align-items:flex-start; flex-direction:column; } .panelHeading .refresh { width:100%; } .resultLine { align-items:flex-start; flex-direction:column; gap:4px; } }
@@ -165,6 +166,7 @@ tbody tr:hover { background:#fff7e6; }
 
   <footer class="siteSign">
     <b>僅為個人用途，不做任何商業利益行為</b>
+    <span>網頁製作：股匠理財部落</span>
   </footer>
 </main>
 
