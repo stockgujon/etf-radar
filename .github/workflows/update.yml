@@ -258,7 +258,9 @@ jobs:
           const ANNOUNCEMENT_MAX_DETAILS = 90;  // 最多點開幾則公告內文
           const ANNOUNCEMENT_KEEP_DISTRIBUTION = 2; // 每檔保留幾則「標為收益分配」的公告
           const ANNOUNCEMENT_KEEP_OTHER = 2;        // 每檔額外保留幾則其他公告當備援
-          const ANNOUNCEMENT_GAP_MS = 200;      // 連續請求之間的間隔，避免對證交所造成瞬間壓力
+          // 連續請求之間的間隔。原本 0.2 秒（每秒 5 次）幾乎必定在開頭幾則之後就被擋，
+          // 放慢到 1.5 秒；54 則公告約多花 70 秒，但換來讀得到。
+          const ANNOUNCEMENT_GAP_MS = 1500;
 
           /* 公告內文裡描述配息金額的寫法各家投信都不一樣，實際看過的差異包括：
                凱基      每受益權單位「預計」配發金額為新「臺」幣0.60元
@@ -378,31 +380,6 @@ jobs:
             return remembered;
           }
 
-          /* 公告內頁要試哪些網址。
-
-             2026-09 證交所把不分類列表裡的公告連結改成帶 type=all，而公告內頁吃到 type=all
-             就不給內文，導致整批公告讀不到（只剩最新幾則靠別的來源補上）。這裡不賭哪一種
-             才對，而是依序試：換成 distribution -> 整個 type 拿掉 -> 原本的網址。
-             原本的網址永遠排在最後保底，所以現在能成功的不會被改壞。
-             preferred 是同一次執行中已經證實可用的形式，優先排前面，省下多餘的請求。*/
-          function announcementUrlVariants(href, preferred) {
-            const variants = [];
-            if (/[?&]type=all(?:&|$)/.test(href)) {
-              variants.push({ form: 'type=distribution', url: href.replace(/([?&]type=)all(?=&|$)/, '$1distribution') });
-              variants.push({ form: '不帶 type', url: href.replace(/([?&])type=all(?:&|$)/, '$1').replace(/[?&]$/, '') });
-            }
-            variants.push({ form: '原網址', url: href });
-            const unique = [];
-            const seen = new Set();
-            for (const variant of variants) {
-              if (seen.has(variant.url)) continue;
-              seen.add(variant.url);
-              unique.push(variant);
-            }
-            if (!preferred) return unique;
-            return [...unique.filter((v) => v.form === preferred), ...unique.filter((v) => v.form !== preferred)];
-          }
-
           /* 掃描收益分配公告，回傳 Map<代號, { exDate, amount, announcedOn }>
 
              這裡刻意「不」用網址上的 type=distribution 去讓伺服器幫忙篩選 —— 實測發現帶了
@@ -454,32 +431,25 @@ jobs:
             const announced = new Map();
             let opened = 0;
             let requested = 0;
-            // 同一次執行中，只要有一種網址形式成功過就優先用它，避免每則都從頭試三次
-            let preferredForm = null;
             for (const [code, buckets] of candidatesByCode) {
               // 標成收益分配的先試（通常第一則就中），其他分類的只當備援
               const ordered = [...buckets.primary, ...buckets.fallback];
               for (const item of ordered) {        // 最新那則若解析不出未來除息日，再回溯前一則
                 if (opened >= ANNOUNCEMENT_MAX_DETAILS) break;
                 opened += 1;
-                let detail = null;
-                let usedForm = null;
-                for (const variant of announcementUrlVariants(item.href, preferredForm)) {
-                  requested += 1;
-                  await sleep(ANNOUNCEMENT_GAP_MS);
-                  const attempt = await tryHosts(variant.url, undefined, async (response) => {
-                    const parsed = parseAnnouncementDetail(await response.text());
-                    return parsed.exDate || parsed.declined ? parsed : null;
-                  });
-                  if (attempt.value) { detail = attempt.value; usedForm = variant.form; break; }
-                }
-                if (detail && preferredForm !== usedForm) {
-                  preferredForm = usedForm;
-                  console.log(`收益分配公告：改用「${usedForm}」形式的公告網址`);
-                }
+                requested += 1;
+                await sleep(ANNOUNCEMENT_GAP_MS);
+                const attempt = await tryHosts(item.href, { headers: { referer: `${TWSE}/zh/ETFortune/announcementList` } }, async (response) => {
+                  const parsed = parseAnnouncementDetail(await response.text());
+                  return parsed.exDate || parsed.declined ? parsed : null;
+                });
+                const detail = attempt.value;
                 if (!detail) {
-                  // 其他分類的公告本來就常常讀不到內容，不需要示警
-                  if (item.isDistribution) console.warn(`收益分配公告讀取失敗，略過：${code} ${item.href}`);
+                  /* 把 tryHosts 收集到的真正原因一起印出來。少了這段，「讀取失敗」四個字
+                     沒辦法分辨是被擋（403／307）、還是頁面內容真的不符預期。*/
+                  if (item.isDistribution) {
+                    console.warn(`收益分配公告讀取失敗，略過：${code} ${item.href}｜原因：${attempt.problems.join('；')}`);
+                  }
                   continue;
                 }
                 if (detail.declined) continue;                        // 本次不予分配
