@@ -48,7 +48,7 @@ jobs:
            * 本機想手動測試：node scripts/fetch.mjs
            */
 
-          import { writeFile } from 'node:fs/promises';
+          import { readFile, writeFile } from 'node:fs/promises';
 
           // 證交所有多台主機，且不是每一台都提供全部頁面（wwwc 曾把配息頁下架回 404），
           // 所以每個請求都依序輪流嘗試，全部失敗才放棄。
@@ -337,6 +337,72 @@ jobs:
             return Math.abs(new Date(`${isoA}T00:00:00Z`) - new Date(`${isoB}T00:00:00Z`)) / 86400000;
           }
 
+          /* 「下次配息」可接受的最遠除息日。投信不會提早半年公告，超過這個範圍多半是解析錯誤。*/
+          const NEXT_DIVIDEND_MAX_AHEAD_DAYS = 120;
+
+          function isUsableNextDividend(exDate, today) {
+            if (!exDate || !(exDate > today)) return false;
+            return daysBetween(exDate, today) <= NEXT_DIVIDEND_MAX_AHEAD_DAYS;
+          }
+
+          /* 讀回上一次寫出去的 data.json，只留還沒到期的「下次配息」。
+
+             這支程式每次都是從零重建，任何一次沒抓到就會讓欄位變空白。但「某檔將在 X 日除息」
+             這件事在 X 日到來之前都還是對的，不該因為當天沒讀到公告就消失。
+             所以讀不到時沿用上次的值，除息日一過就自動不再沿用；只要有讀到新的，一律以新的為準。*/
+          async function loadPreviousNextDividends(today) {
+            const remembered = new Map();
+            let raw;
+            try {
+              raw = await readFile('data.json', 'utf8');
+            } catch {
+              console.log('上一版 data.json 不存在（第一次執行），沒有可沿用的下次配息');
+              return remembered;
+            }
+            try {
+              const previous = JSON.parse(raw);
+              for (const etf of (previous && previous.etfs) || []) {
+                const next = etf && etf.nextDividend;
+                if (!etf.code || !next || next.amount == null) continue;
+                if (!isUsableNextDividend(next.exDate, today)) continue;
+                remembered.set(etf.code, {
+                  amount: next.amount,
+                  exDate: next.exDate,
+                  source: etf.nextDividendSource || '公告預估',
+                });
+              }
+              console.log(`上一版 data.json：有 ${remembered.size} 檔的下次配息還沒到期，必要時可沿用`);
+            } catch (reason) {
+              console.warn(`上一版 data.json 讀不動，這次不沿用（不影響其他資料）：${reason && reason.message}`);
+            }
+            return remembered;
+          }
+
+          /* 公告內頁要試哪些網址。
+
+             2026-09 證交所把不分類列表裡的公告連結改成帶 type=all，而公告內頁吃到 type=all
+             就不給內文，導致整批公告讀不到（只剩最新幾則靠別的來源補上）。這裡不賭哪一種
+             才對，而是依序試：換成 distribution -> 整個 type 拿掉 -> 原本的網址。
+             原本的網址永遠排在最後保底，所以現在能成功的不會被改壞。
+             preferred 是同一次執行中已經證實可用的形式，優先排前面，省下多餘的請求。*/
+          function announcementUrlVariants(href, preferred) {
+            const variants = [];
+            if (/[?&]type=all(?:&|$)/.test(href)) {
+              variants.push({ form: 'type=distribution', url: href.replace(/([?&]type=)all(?=&|$)/, '$1distribution') });
+              variants.push({ form: '不帶 type', url: href.replace(/([?&])type=all(?:&|$)/, '$1').replace(/[?&]$/, '') });
+            }
+            variants.push({ form: '原網址', url: href });
+            const unique = [];
+            const seen = new Set();
+            for (const variant of variants) {
+              if (seen.has(variant.url)) continue;
+              seen.add(variant.url);
+              unique.push(variant);
+            }
+            if (!preferred) return unique;
+            return [...unique.filter((v) => v.form === preferred), ...unique.filter((v) => v.form !== preferred)];
+          }
+
           /* 掃描收益分配公告，回傳 Map<代號, { exDate, amount, announcedOn }>
 
              這裡刻意「不」用網址上的 type=distribution 去讓伺服器幫忙篩選 —— 實測發現帶了
@@ -387,18 +453,30 @@ jobs:
 
             const announced = new Map();
             let opened = 0;
+            let requested = 0;
+            // 同一次執行中，只要有一種網址形式成功過就優先用它，避免每則都從頭試三次
+            let preferredForm = null;
             for (const [code, buckets] of candidatesByCode) {
               // 標成收益分配的先試（通常第一則就中），其他分類的只當備援
               const ordered = [...buckets.primary, ...buckets.fallback];
               for (const item of ordered) {        // 最新那則若解析不出未來除息日，再回溯前一則
                 if (opened >= ANNOUNCEMENT_MAX_DETAILS) break;
                 opened += 1;
-                await sleep(ANNOUNCEMENT_GAP_MS);
-                const attempt = await tryHosts(item.href, undefined, async (response) => {
-                  const detail = parseAnnouncementDetail(await response.text());
-                  return detail.exDate || detail.declined ? detail : null;
-                });
-                const detail = attempt.value;
+                let detail = null;
+                let usedForm = null;
+                for (const variant of announcementUrlVariants(item.href, preferredForm)) {
+                  requested += 1;
+                  await sleep(ANNOUNCEMENT_GAP_MS);
+                  const attempt = await tryHosts(variant.url, undefined, async (response) => {
+                    const parsed = parseAnnouncementDetail(await response.text());
+                    return parsed.exDate || parsed.declined ? parsed : null;
+                  });
+                  if (attempt.value) { detail = attempt.value; usedForm = variant.form; break; }
+                }
+                if (detail && preferredForm !== usedForm) {
+                  preferredForm = usedForm;
+                  console.log(`收益分配公告：改用「${usedForm}」形式的公告網址`);
+                }
                 if (!detail) {
                   // 其他分類的公告本來就常常讀不到內容，不需要示警
                   if (item.isDistribution) console.warn(`收益分配公告讀取失敗，略過：${code} ${item.href}`);
@@ -417,7 +495,7 @@ jobs:
                 break;
               }
             }
-            console.log(`收益分配公告：讀了 ${pagesRead} 頁共 ${rowsSeen} 則，命中 ${candidatesByCode.size} 檔，點開 ${opened} 則`);
+            console.log(`收益分配公告：讀了 ${pagesRead} 頁共 ${rowsSeen} 則，命中 ${candidatesByCode.size} 檔，點開 ${opened} 則（實際請求 ${requested} 次）`);
             return announced;
           }
 
@@ -512,6 +590,9 @@ jobs:
             const dividendRows = parseDividendRows(dividendHtml).filter((row) => trackedCodeSet.has(row.code));
             const today = taipeiToday();
 
+            // 上一版已經知道、但還沒除息的「下次配息」，這次讀不到時拿來墊底
+            const rememberedNextDividends = await loadPreviousNextDividends(today);
+
             // 加分項：抓投信的收益分配公告來補「下次配息」。整段失敗也只是少了這一欄。
             let announcedDividends = new Map();
             try {
@@ -520,6 +601,7 @@ jobs:
             } catch (reason) {
               console.warn(`收益分配公告掃描失敗，略過（不影響其他資料）：${reason && reason.message}`);
             }
+            let carriedOverCount = 0;
 
             const etfs = trackedCodes.map((code) => {
               const product = productsByCode.get(code);
@@ -541,12 +623,27 @@ jobs:
               const announced = announcedDividends.get(code);
               if (
                 announced
-                && announced.exDate > today
+                && isUsableNextDividend(announced.exDate, today)
                 && (!latestDividend || announced.exDate > latestDividend.exDate)
                 && (!nextDividend || announced.exDate < nextDividend.exDate)
               ) {
                 nextDividend = { amount: announced.amount, exDate: announced.exDate };
                 nextDividendSource = '公告預估';
+              }
+              // 兩個來源這次都沒給，才沿用上一版還沒到期的值。有新資料時永遠以新的為準。
+              let nextDividendCarriedOver = false;
+              if (!nextDividend) {
+                const remembered = rememberedNextDividends.get(code);
+                if (
+                  remembered
+                  && isUsableNextDividend(remembered.exDate, today)
+                  && (!latestDividend || remembered.exDate > latestDividend.exDate)
+                ) {
+                  nextDividend = { amount: remembered.amount, exDate: remembered.exDate };
+                  nextDividendSource = remembered.source;
+                  nextDividendCarriedOver = true;
+                  carriedOverCount += 1;
+                }
               }
               const description = (records.find((row) => row.description) || {}).description || '';
               const frequency = FREQUENCY_OVERRIDES[code] || inferFrequency(records, description);
@@ -567,6 +664,7 @@ jobs:
                 latestDividend: latestDividend ? { amount: latestDividend.amount, exDate: latestDividend.exDate } : null,
                 nextDividend,
                 nextDividendSource,
+                nextDividendCarriedOver,
                 frequency: frequency.label,
                 frequencyBasis: frequency.basis,
                 paymentsPerYear: frequency.times,
@@ -582,6 +680,9 @@ jobs:
                 sourceUrl: `${TWSE}/zh/ETFortune-institute/etfInfo/${code}`,
               };
             });
+
+            const withNext = etfs.filter((etf) => etf.nextDividend).length;
+            console.log(`下次配息：這次共 ${withNext} 檔有資料，其中 ${carriedOverCount} 檔是沿用上一版`);
 
             return {
               asOf: new Date().toISOString(),
