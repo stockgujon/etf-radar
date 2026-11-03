@@ -43,6 +43,8 @@ button,input,select { font:inherit; }
 .refresh { min-height:44px; border:0; border-radius:14px; padding:0 18px; color:white; background:var(--green); font-weight:800; cursor:pointer; }
 .refresh:disabled { opacity:.6; cursor:wait; }
 .clearFilters { min-height:46px; padding:0 16px; border:1px solid #b98a43; border-radius:13px; color:#76501c; background:#fffaf1; font-size:16px; font-weight:800; cursor:pointer; white-space:nowrap; }
+.downloadCsv { min-height:46px; padding:0 16px; border:1px solid #6f9a6b; border-radius:13px; color:#2f5c2c; background:#f3faf2; font-size:16px; font-weight:800; cursor:pointer; white-space:nowrap; }
+.downloadCsv:disabled { opacity:.45; cursor:default; }
 .clearFilters:hover { background:#f4e4c7; }
 .cards { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:18px; }
 .cards article { padding:18px; border:1px solid var(--line); border-radius:18px; background:#fffaf1; }
@@ -95,7 +97,7 @@ tbody tr:hover { background:#fff7e6; }
 @media (max-width:720px) { .siteSign b { font-size:14px; letter-spacing:.04em; } .siteSign span { font-size:13px; } }
 .sourceBadge,.heroMeta span:nth-child(2),.cards strong,.resultLine,td:nth-child(1),td:nth-child(3),td:nth-child(4),td:nth-child(5),td:nth-child(7),td:nth-child(8) { font-family:"Roboto Mono","Noto Sans TC",Consolas,monospace; font-variant-numeric:tabular-nums; }
 @media (max-width:900px) { .methodGrid { grid-template-columns:1fr; } .footerNote { flex-direction:column; } table { min-width:1320px; } }
-@media (max-width:720px) { .sourceBadge { display:none; } .hero { padding-top:46px; } .cards { grid-template-columns:1fr; } .toolbar { align-items:stretch; flex-direction:column; } .search { max-width:none; } .clearFilters,.refresh { padding:12px; } .panel { width:calc(100% - 24px); padding:14px; } .panelHeading { align-items:flex-start; flex-direction:column; } .panelHeading .refresh { width:100%; } .resultLine { align-items:flex-start; flex-direction:column; gap:4px; } }
+@media (max-width:720px) { .sourceBadge { display:none; } .hero { padding-top:46px; } .cards { grid-template-columns:1fr; } .toolbar { align-items:stretch; flex-direction:column; } .search { max-width:none; } .clearFilters,.refresh,.downloadCsv { padding:12px; } .panel { width:calc(100% - 24px); padding:14px; } .panelHeading { align-items:flex-start; flex-direction:column; } .panelHeading .refresh { width:100%; } .resultLine { align-items:flex-start; flex-direction:column; gap:4px; } }
 </style>
 </head>
 <body>
@@ -129,6 +131,7 @@ tbody tr:hover { background:#fff7e6; }
     <div class="toolbar">
       <label class="search"><span aria-hidden="true">⌕</span><input id="query" aria-label="搜尋商品代號、名稱或投信" placeholder="搜尋代號、商品名稱或投信" /></label>
       <button class="clearFilters" type="button" id="clearBtn">清除篩選</button>
+      <button class="downloadCsv" type="button" id="downloadBtn" title="把目前畫面上的清單存成 CSV，可直接用 Excel 開啟">⤓ 下載 Excel</button>
     </div>
 
     <div class="resultLine"><span>顯示 <b id="rowCount">0</b> 檔</span><span>資料時間：<span id="updatedAt">尚未同步</span>（臺北）</span></div>
@@ -310,6 +313,69 @@ tbody tr:hover { background:#fff7e6; }
     select.value = options.indexOf(state.frequency) === -1 ? 'all' : state.frequency;
   }
 
+  /* --------------------------- 下載 CSV ---------------------------- */
+  /* 純前端：資料本來就已經在瀏覽器裡（表格就是用它畫的），這裡只是換個格式存成檔案。
+     不會對證交所或 GitHub 發出任何請求，也跟排程完全無關。
+     開頭的 ﻿ 是 UTF-8 BOM，沒有它 Excel 開中文會變亂碼。 */
+  var CSV_COLUMNS = [
+    ['商品代號',        function (e) { return e.code; }],
+    ['商品名稱',        function (e) { return e.name; }],
+    ['投信',            function (e) { return String(e.issuer || '').replace('證券投資信託股份有限公司', '投信'); }],
+    ['收盤股價',        function (e) { return e.price; }],
+    ['收盤參考日期',    function (e) { return e.closeDate; }],
+    ['最近一次配息',    function (e) { return e.latestDividend ? e.latestDividend.amount : ''; }],
+    ['最近一次除息日',  function (e) { return e.latestDividend ? e.latestDividend.exDate : ''; }],
+    ['下次配息',        function (e) { return e.nextDividend ? e.nextDividend.amount : ''; }],
+    ['下次除息日',      function (e) { return e.nextDividend ? e.nextDividend.exDate : ''; }],
+    ['下次配息來源',    function (e) { return e.nextDividend ? (e.nextDividendSource || '') : ''; }],
+    ['配息頻率',        function (e) { return e.frequency; }],
+    ['年化殖利率(%)',   function (e) { return e.annualizedYield == null ? '' : Number(e.annualizedYield.toFixed(2)); }],
+    ['殖利率依據',      function (e) { return e.yieldBasis || ''; }],
+    ['商品規模(億元)',  function (e) { return e.aumBillionTwd; }],
+    ['投資地區',        function (e) { return e.region || ''; }],
+    ['投資地區細分',    function (e) { return e.regionDetail || ''; }],
+    ['收益平準金',      function (e) { return e.hasIncomeEqualization ? '有' : '無'; }]
+  ];
+
+  function csvCell(value) {
+    if (value === null || value === undefined) return '';
+    var text = String(value);
+    return /[",\r\n]/.test(text) ? '"' + text.replace(/"/g, '""') + '"' : text;
+  }
+
+  function csvFileName() {
+    var stamp = '';
+    if (state.payload && state.payload.asOf) {
+      var parts = new Intl.DateTimeFormat('en-CA', {
+        timeZone: 'Asia/Taipei', year: 'numeric', month: '2-digit', day: '2-digit',
+        hour: '2-digit', minute: '2-digit', hourCycle: 'h23'
+      }).formatToParts(new Date(state.payload.asOf));
+      var get = function (type) { return (parts.find(function (part) { return part.type === type; }) || {}).value || ''; };
+      stamp = '_' + get('year') + get('month') + get('day') + '_' + get('hour') + get('minute');
+    }
+    return '高息ETF配息雷達' + stamp + '.csv';
+  }
+
+  function downloadCsv() {
+    var rows = visibleRows();
+    if (!rows.length) return;
+
+    var lines = [CSV_COLUMNS.map(function (column) { return csvCell(column[0]); }).join(',')];
+    rows.forEach(function (etf) {
+      lines.push(CSV_COLUMNS.map(function (column) { return csvCell(column[1](etf)); }).join(','));
+    });
+
+    var blob = new Blob(['﻿' + lines.join('\r\n') + '\r\n'], { type: 'text/csv;charset=utf-8;' });
+    var url = URL.createObjectURL(blob);
+    var link = document.createElement('a');
+    link.href = url;
+    link.download = csvFileName();
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+  }
+
   /* ------------------------------ 畫面 ------------------------------ */
   function rowHtml(etf) {
     var latest = etf.latestDividend
@@ -373,6 +439,10 @@ tbody tr:hover { background:#fff7e6; }
     el('rowCount').textContent = rows.length;
     el('updatedAt').textContent = updatedAtLabel();
 
+    var downloadBtn = el('downloadBtn');
+    downloadBtn.disabled = rows.length === 0;
+    downloadBtn.textContent = rows.length ? '⤓ 下載 Excel（' + rows.length + ' 檔）' : '⤓ 下載 Excel';
+
     el('tbody').innerHTML = rows.length
       ? rows.map(rowHtml).join('')
       : (!state.loading && !state.error ? '<tr><td colspan="10" class="empty">找不到符合條件的商品</td></tr>' : '');
@@ -405,6 +475,7 @@ tbody tr:hover { background:#fff7e6; }
   el('filterRegion').addEventListener('change', function (event) { state.region = event.target.value; render(); });
   ['sortPrice', 'sortLatest', 'sortNext', 'sortYield', 'sortAum'].forEach(bindSort);
   el('refreshBtn').addEventListener('click', function () { void load(); });
+  el('downloadBtn').addEventListener('click', downloadCsv);
   el('clearBtn').addEventListener('click', function () {
     state.query = ''; state.equalization = 'all'; state.region = 'all';
     state.latestFilter = 'all'; state.nextFilter = 'all'; state.yieldFilter = 'all';
