@@ -1,5 +1,5 @@
 {
- "asOf": "2026-11-03T14:02:30.136Z",
+ "asOf": "2026-11-03T16:08:40.199Z",
  "marketStatus": "收盤",
  "scope": "每次同步依證交所「高股息」與「高息低波動」主題分類重建，收錄該分類下的全部臺灣掛牌 ETF；再與證交所「國內成分證券 ETF」及「國內主動式 ETF」官方清單比對，標示每一檔的投資地區。",
  "etfs": [
@@ -26,7 +26,7 @@
    "paymentsPerYear": 12,
    "annualizedYield": 11.154144074360959,
    "yieldBasis": "下次已公告配息",
-   "aumBillionTwd": 301,
+   "aumBillionTwd": 288,
    "hasIncomeEqualization": true,
    "equalizationBasis": "官方收益分配條款",
    "sourceUrl": "https://www.twse.com.tw/zh/ETFortune-institute/etfInfo/00400A"
@@ -48,7 +48,7 @@
    "paymentsPerYear": 4,
    "annualizedYield": null,
    "yieldBasis": null,
-   "aumBillionTwd": 208,
+   "aumBillionTwd": 197,
    "hasIncomeEqualization": true,
    "equalizationBasis": "官方基金名稱與公開資料",
    "sourceUrl": "https://www.twse.com.tw/zh/ETFortune-institute/etfInfo/00405A"
@@ -73,7 +73,7 @@
    "paymentsPerYear": 4,
    "annualizedYield": 12.847805788982262,
    "yieldBasis": "最近一次配息",
-   "aumBillionTwd": 8302,
+   "aumBillionTwd": 8005,
    "hasIncomeEqualization": true,
    "equalizationBasis": "官方收益分配條款",
    "sourceUrl": "https://www.twse.com.tw/zh/ETFortune-institute/etfInfo/0056"
@@ -98,7 +98,7 @@
    "paymentsPerYear": 2,
    "annualizedYield": 7.613609326671425,
    "yieldBasis": "最近一次配息",
-   "aumBillionTwd": 72,
+   "aumBillionTwd": 71,
    "hasIncomeEqualization": false,
    "equalizationBasis": "官方收益分配條款",
    "sourceUrl": "https://www.twse.com.tw/zh/ETFortune-institute/etfInfo/00701"
@@ -148,7 +148,7 @@
    "paymentsPerYear": 4,
    "annualizedYield": 7.763975155279502,
    "yieldBasis": "最近一次配息",
-   "aumBillionTwd": 1111,
+   "aumBillionTwd": 1095,
    "hasIncomeEqualization": true,
    "equalizationBasis": "官方收益分配條款",
    "sourceUrl": "https://www.twse.com.tw/zh/ETFortune-institute/etfInfo/00713"
@@ -201,7 +201,7 @@
    "paymentsPerYear": 12,
    "annualizedYield": 4.784342152953969,
    "yieldBasis": "下次配息（公告預估）",
-   "aumBillionTwd": 20,
+   "aumBillionTwd": 19,
    "hasIncomeEqualization": true,
    "equalizationBasis": "官方收益分配條款",
    "sourceUrl": "https://www.twse.com.tw/zh/ETFortune-institute/etfInfo/00730"
@@ -285,7 +285,7 @@
    "paymentsPerYear": 4,
    "annualizedYield": 14.762326542663127,
    "yieldBasis": "下次配息（公告預估）",
-   "aumBillionTwd": 6648,
+   "aumBillionTwd": 6511,
    "hasIncomeEqualization": true,
    "equalizationBasis": "官方收益分配條款",
    "sourceUrl": "https://www.twse.com.tw/zh/ETFortune-institute/etfInfo/00878"
@@ -310,7 +310,7 @@
    "paymentsPerYear": 2,
    "annualizedYield": 7.246376811594203,
    "yieldBasis": "最近一次配息",
-   "aumBillionTwd": 292,
+   "aumBillionTwd": 290,
    "hasIncomeEqualization": true,
    "equalizationBasis": "官方收益分配條款",
    "sourceUrl": "https://www.twse.com.tw/zh/ETFortune-institute/etfInfo/00882"
@@ -338,7 +338,7 @@
    "paymentsPerYear": 12,
    "annualizedYield": 4.761904761904762,
    "yieldBasis": "下次配息（公告預估）",
-   "aumBillionTwd": 280,
+   "aumBillionTwd": 272,
    "hasIncomeEqualization": true,
    "equalizationBasis": "官方收益分配條款",
    "sourceUrl": "https://www.twse.com.tw/zh/ETFortune-institute/etfInfo/00900"
@@ -363,7 +363,7 @@
    "paymentsPerYear": 6,
    "annualizedYield": 8.958217270194988,
    "yieldBasis": "最近一次配息",
-   "aumBillionTwd": 28,
+   "aumBillionTwd": 27,
    "hasIncomeEqualization": true,
    "equalizationBasis": "官方收益分配條款",
    "sourceUrl": "https://www.twse.com.tw/zh/ETFortune-institute/etfInfo/00907"
@@ -388,7 +388,7 @@
    "paymentsPerYear": 4,
    "annualizedYield": 7.425742574257425,
    "yieldBasis": "最近一次配息",
-   "aumBillionTwd": 164,
+   "aumBillionTwd": 160,
    "hasIncomeEqualization": true,
    "equalizationBasis": "官方收益分配條款",
    "sourceUrl": "https://www.twse.com.tw/zh/ETFortune-institute/etfInfo/00915"
@@ -413,7 +413,7 @@
    "paymentsPerYear": 4,
    "annualizedYield": 20.908004778972522,
    "yieldBasis": "最近一次配息",
-   "aumBillionTwd": 1615,
+   "aumBillionTwd": 1578,
    "hasIncomeEqualization": true,
    "equalizationBasis": "官方收益分配條款",
    "sourceUrl": "https://www.twse.com.tw/zh/ETFortune-institute/etfInfo/00918"
@@ -438,7 +438,7 @@
    "paymentsPerYear": 4,
    "annualizedYield": 13.871374527112234,
    "yieldBasis": "最近一次配息",
-   "aumBillionTwd": 6296,
+   "aumBillionTwd": 6147,
    "hasIncomeEqualization": true,
    "equalizationBasis": "官方收益分配條款",
    "sourceUrl": "https://www.twse.com.tw/zh/ETFortune-institute/etfInfo/00919"
@@ -466,7 +466,7 @@
    "paymentsPerYear": 12,
    "annualizedYield": 17.19457013574661,
    "yieldBasis": "下次配息（公告預估）",
-   "aumBillionTwd": 1601,
+   "aumBillionTwd": 1544,
    "hasIncomeEqualization": true,
    "equalizationBasis": "官方收益分配條款",
    "sourceUrl": "https://www.twse.com.tw/zh/ETFortune-institute/etfInfo/00929"
@@ -494,7 +494,7 @@
    "paymentsPerYear": 6,
    "annualizedYield": 20.297699594046005,
    "yieldBasis": "下次配息（公告預估）",
-   "aumBillionTwd": 36,
+   "aumBillionTwd": 35,
    "hasIncomeEqualization": true,
    "equalizationBasis": "官方收益分配條款",
    "sourceUrl": "https://www.twse.com.tw/zh/ETFortune-institute/etfInfo/00930"
@@ -522,7 +522,7 @@
    "paymentsPerYear": 4,
    "annualizedYield": 5.443786982248521,
    "yieldBasis": "下次配息（公告預估）",
-   "aumBillionTwd": 18,
+   "aumBillionTwd": 17,
    "hasIncomeEqualization": true,
    "equalizationBasis": "官方收益分配條款",
    "sourceUrl": "https://www.twse.com.tw/zh/ETFortune-institute/etfInfo/00932"
@@ -550,7 +550,7 @@
    "paymentsPerYear": 12,
    "annualizedYield": 21.141649048625794,
    "yieldBasis": "下次配息（公告預估）",
-   "aumBillionTwd": 147,
+   "aumBillionTwd": 144,
    "hasIncomeEqualization": true,
    "equalizationBasis": "官方收益分配條款",
    "sourceUrl": "https://www.twse.com.tw/zh/ETFortune-institute/etfInfo/00934"
@@ -578,7 +578,7 @@
    "paymentsPerYear": 12,
    "annualizedYield": 9.35672514619883,
    "yieldBasis": "下次配息（公告預估）",
-   "aumBillionTwd": 41,
+   "aumBillionTwd": 39,
    "hasIncomeEqualization": true,
    "equalizationBasis": "官方收益分配條款",
    "sourceUrl": "https://www.twse.com.tw/zh/ETFortune-institute/etfInfo/00936"
@@ -603,7 +603,7 @@
    "paymentsPerYear": 12,
    "annualizedYield": 7.401315789473683,
    "yieldBasis": "最近一次配息",
-   "aumBillionTwd": 289,
+   "aumBillionTwd": 280,
    "hasIncomeEqualization": true,
    "equalizationBasis": "官方收益分配條款",
    "sourceUrl": "https://www.twse.com.tw/zh/ETFortune-institute/etfInfo/00939"
@@ -631,7 +631,7 @@
    "paymentsPerYear": 12,
    "annualizedYield": 5.714285714285714,
    "yieldBasis": "下次配息（公告預估）",
-   "aumBillionTwd": 649,
+   "aumBillionTwd": 628,
    "hasIncomeEqualization": true,
    "equalizationBasis": "官方收益分配條款",
    "sourceUrl": "https://www.twse.com.tw/zh/ETFortune-institute/etfInfo/00940"
@@ -702,20 +702,17 @@
    "closeDate": "2026-11-03",
    "latestDividend": {
     "amount": 0.058,
-    "exDate": "2026-10-07"
-   },
-   "nextDividend": {
-    "amount": 0.058,
     "exDate": "2026-11-04"
    },
-   "nextDividendSource": "證交所配息清單",
+   "nextDividend": null,
+   "nextDividendSource": null,
    "nextDividendCarriedOver": false,
    "frequency": "月配",
    "frequencyBasis": "近次實際配息間隔",
    "paymentsPerYear": 12,
    "annualizedYield": 4.715447154471545,
-   "yieldBasis": "下次已公告配息",
-   "aumBillionTwd": 63,
+   "yieldBasis": "最近一次配息",
+   "aumBillionTwd": 62,
    "hasIncomeEqualization": true,
    "equalizationBasis": "官方收益分配條款",
    "sourceUrl": "https://www.twse.com.tw/zh/ETFortune-institute/etfInfo/00946"
@@ -762,13 +759,13 @@
     "exDate": "2026-11-17"
    },
    "nextDividendSource": "公告預估",
-   "nextDividendCarriedOver": false,
+   "nextDividendCarriedOver": true,
    "frequency": "月配",
    "frequencyBasis": "近次實際配息間隔",
    "paymentsPerYear": 12,
    "annualizedYield": 8.26319816373374,
    "yieldBasis": "下次配息（公告預估）",
-   "aumBillionTwd": 111,
+   "aumBillionTwd": 108,
    "hasIncomeEqualization": true,
    "equalizationBasis": "官方收益分配條款",
    "sourceUrl": "https://www.twse.com.tw/zh/ETFortune-institute/etfInfo/00961"
@@ -796,7 +793,7 @@
    "paymentsPerYear": 12,
    "annualizedYield": 8.948545861297541,
    "yieldBasis": "下次配息（公告預估）",
-   "aumBillionTwd": 33,
+   "aumBillionTwd": 31,
    "hasIncomeEqualization": true,
    "equalizationBasis": "官方收益分配條款",
    "sourceUrl": "https://www.twse.com.tw/zh/ETFortune-institute/etfInfo/00962"
@@ -824,7 +821,7 @@
    "paymentsPerYear": 12,
    "annualizedYield": 9.623095429029673,
    "yieldBasis": "下次配息（公告預估）",
-   "aumBillionTwd": 16,
+   "aumBillionTwd": 17,
    "hasIncomeEqualization": true,
    "equalizationBasis": "官方收益分配條款",
    "sourceUrl": "https://www.twse.com.tw/zh/ETFortune-institute/etfInfo/00963"
@@ -902,7 +899,7 @@
    "paymentsPerYear": 4,
    "annualizedYield": 13.504639543183439,
    "yieldBasis": "最近一次配息",
-   "aumBillionTwd": 101,
+   "aumBillionTwd": 97,
    "hasIncomeEqualization": true,
    "equalizationBasis": "官方收益分配條款",
    "sourceUrl": "https://www.twse.com.tw/zh/ETFortune-institute/etfInfo/00984A"
@@ -927,7 +924,7 @@
    "paymentsPerYear": 4,
    "annualizedYield": 11.885245901639344,
    "yieldBasis": "最近一次配息",
-   "aumBillionTwd": 102,
+   "aumBillionTwd": 98,
    "hasIncomeEqualization": true,
    "equalizationBasis": "官方收益分配條款",
    "sourceUrl": "https://www.twse.com.tw/zh/ETFortune-institute/etfInfo/00999A"
