@@ -1,5 +1,5 @@
 {
- "asOf": "2026-11-06T07:53:41.039Z",
+ "asOf": "2026-11-06T14:08:59.191Z",
  "marketStatus": "收盤",
  "scope": "每次同步依證交所「高股息」與「高息低波動」主題分類重建，收錄該分類下的全部臺灣掛牌 ETF；再與證交所「國內成分證券 ETF」及「國內主動式 ETF」官方清單比對，標示每一檔的投資地區。",
  "etfs": [
@@ -220,7 +220,7 @@
     "exDate": "2026-11-18"
    },
    "nextDividendSource": "公告預估",
-   "nextDividendCarriedOver": false,
+   "nextDividendCarriedOver": true,
    "frequency": "季配",
    "frequencyBasis": "官方收益分配條款",
    "paymentsPerYear": 4,
@@ -329,7 +329,7 @@
     "exDate": "2026-11-17"
    },
    "nextDividendSource": "公告預估",
-   "nextDividendCarriedOver": false,
+   "nextDividendCarriedOver": true,
    "frequency": "月配",
    "frequencyBasis": "近次實際配息間隔",
    "paymentsPerYear": 12,
@@ -513,7 +513,7 @@
     "exDate": "2026-11-17"
    },
    "nextDividendSource": "公告預估",
-   "nextDividendCarriedOver": false,
+   "nextDividendCarriedOver": true,
    "frequency": "季配",
    "frequencyBasis": "官方收益分配條款",
    "paymentsPerYear": 4,
@@ -569,7 +569,7 @@
     "exDate": "2026-11-16"
    },
    "nextDividendSource": "公告預估",
-   "nextDividendCarriedOver": false,
+   "nextDividendCarriedOver": true,
    "frequency": "月配",
    "frequencyBasis": "官方收益分配條款",
    "paymentsPerYear": 12,
