@@ -1,5 +1,5 @@
 {
- "asOf": "2026-11-16T15:34:30.061Z",
+ "asOf": "2026-11-16T18:23:51.986Z",
  "marketStatus": "收盤",
  "scope": "每次同步依證交所「高股息」與「高息低波動」主題分類重建，收錄該分類下的全部臺灣掛牌 ETF；再與證交所「國內成分證券 ETF」及「國內主動式 ETF」官方清單比對，標示每一檔的投資地區。",
  "etfs": [
@@ -185,19 +185,16 @@
    "closeDate": "2026-11-16",
    "latestDividend": {
     "amount": 0.11,
-    "exDate": "2026-10-19"
-   },
-   "nextDividend": {
-    "amount": 0.11,
     "exDate": "2026-11-17"
    },
-   "nextDividendSource": "證交所配息清單",
+   "nextDividend": null,
+   "nextDividendSource": null,
    "nextDividendCarriedOver": false,
    "frequency": "月配",
    "frequencyBasis": "近次實際配息間隔",
    "paymentsPerYear": 12,
    "annualizedYield": 5.057471264367816,
-   "yieldBasis": "下次已公告配息",
+   "yieldBasis": "最近一次配息",
    "aumBillionTwd": 18,
    "hasIncomeEqualization": true,
    "equalizationBasis": "官方收益分配條款",
@@ -268,20 +265,17 @@
    "price": 32.43,
    "closeDate": "2026-11-16",
    "latestDividend": {
-    "amount": 1.01,
-    "exDate": "2026-08-18"
-   },
-   "nextDividend": {
     "amount": 1.25,
     "exDate": "2026-11-17"
    },
-   "nextDividendSource": "證交所配息清單",
+   "nextDividend": null,
+   "nextDividendSource": null,
    "nextDividendCarriedOver": false,
    "frequency": "季配",
    "frequencyBasis": "近次實際配息間隔",
    "paymentsPerYear": 4,
    "annualizedYield": 15.41782300339192,
-   "yieldBasis": "下次已公告配息",
+   "yieldBasis": "最近一次配息",
    "aumBillionTwd": 6419,
    "hasIncomeEqualization": true,
    "equalizationBasis": "官方收益分配條款",
@@ -322,19 +316,16 @@
    "closeDate": "2026-11-16",
    "latestDividend": {
     "amount": 0.075,
-    "exDate": "2026-10-19"
-   },
-   "nextDividend": {
-    "amount": 0.075,
     "exDate": "2026-11-17"
    },
-   "nextDividendSource": "證交所配息清單",
+   "nextDividend": null,
+   "nextDividendSource": null,
    "nextDividendCarriedOver": false,
    "frequency": "月配",
    "frequencyBasis": "近次實際配息間隔",
    "paymentsPerYear": 12,
    "annualizedYield": 4.972375690607734,
-   "yieldBasis": "下次已公告配息",
+   "yieldBasis": "最近一次配息",
    "aumBillionTwd": 257,
    "hasIncomeEqualization": true,
    "equalizationBasis": "官方收益分配條款",
@@ -506,19 +497,16 @@
    "closeDate": "2026-11-16",
    "latestDividend": {
     "amount": 0.23,
-    "exDate": "2026-08-18"
-   },
-   "nextDividend": {
-    "amount": 0.23,
     "exDate": "2026-11-17"
    },
-   "nextDividendSource": "證交所配息清單",
+   "nextDividend": null,
+   "nextDividendSource": null,
    "nextDividendCarriedOver": false,
    "frequency": "季配",
    "frequencyBasis": "官方收益分配條款",
    "paymentsPerYear": 4,
    "annualizedYield": 5.764411027568922,
-   "yieldBasis": "下次已公告配息",
+   "yieldBasis": "最近一次配息",
    "aumBillionTwd": 16,
    "hasIncomeEqualization": true,
    "equalizationBasis": "官方收益分配條款",
@@ -534,19 +522,16 @@
    "closeDate": "2026-11-16",
    "latestDividend": {
     "amount": 0.5,
-    "exDate": "2026-10-19"
-   },
-   "nextDividend": {
-    "amount": 0.5,
     "exDate": "2026-11-17"
    },
-   "nextDividendSource": "證交所配息清單",
+   "nextDividend": null,
+   "nextDividendSource": null,
    "nextDividendCarriedOver": false,
    "frequency": "月配",
    "frequencyBasis": "官方收益分配條款",
    "paymentsPerYear": 12,
    "annualizedYield": 22.497187851518557,
-   "yieldBasis": "下次已公告配息",
+   "yieldBasis": "最近一次配息",
    "aumBillionTwd": 145,
    "hasIncomeEqualization": true,
    "equalizationBasis": "官方收益分配條款",
@@ -639,20 +624,17 @@
    "price": 18.64,
    "closeDate": "2026-11-16",
    "latestDividend": {
-    "amount": 0.36,
-    "exDate": "2026-10-19"
-   },
-   "nextDividend": {
     "amount": 0.35,
     "exDate": "2026-11-17"
    },
-   "nextDividendSource": "證交所配息清單",
+   "nextDividend": null,
+   "nextDividendSource": null,
    "nextDividendCarriedOver": false,
    "frequency": "月配",
    "frequencyBasis": "官方收益分配條款",
    "paymentsPerYear": 12,
    "annualizedYield": 22.532188841201712,
-   "yieldBasis": "下次已公告配息",
+   "yieldBasis": "最近一次配息",
    "aumBillionTwd": 12,
    "hasIncomeEqualization": true,
    "equalizationBasis": "官方收益分配條款",
@@ -668,19 +650,16 @@
    "closeDate": "2026-11-16",
    "latestDividend": {
     "amount": 0.109,
-    "exDate": "2026-10-19"
-   },
-   "nextDividend": {
-    "amount": 0.109,
     "exDate": "2026-11-17"
    },
-   "nextDividendSource": "證交所配息清單",
+   "nextDividend": null,
+   "nextDividendSource": null,
    "nextDividendCarriedOver": false,
    "frequency": "月配",
    "frequencyBasis": "官方收益分配條款",
    "paymentsPerYear": 12,
    "annualizedYield": 6.592741935483872,
-   "yieldBasis": "下次已公告配息",
+   "yieldBasis": "最近一次配息",
    "aumBillionTwd": 10,
    "hasIncomeEqualization": true,
    "equalizationBasis": "官方收益分配條款",
@@ -746,19 +725,16 @@
    "closeDate": "2026-11-16",
    "latestDividend": {
     "amount": 0.09,
-    "exDate": "2026-10-19"
-   },
-   "nextDividend": {
-    "amount": 0.09,
     "exDate": "2026-11-17"
    },
-   "nextDividendSource": "證交所配息清單",
+   "nextDividend": null,
+   "nextDividendSource": null,
    "nextDividendCarriedOver": false,
    "frequency": "月配",
    "frequencyBasis": "近次實際配息間隔",
    "paymentsPerYear": 12,
    "annualizedYield": 8.571428571428573,
-   "yieldBasis": "下次已公告配息",
+   "yieldBasis": "最近一次配息",
    "aumBillionTwd": 101,
    "hasIncomeEqualization": true,
    "equalizationBasis": "官方收益分配條款",
@@ -799,19 +775,16 @@
    "closeDate": "2026-11-16",
    "latestDividend": {
     "amount": 0.1,
-    "exDate": "2026-10-19"
-   },
-   "nextDividend": {
-    "amount": 0.1,
     "exDate": "2026-11-17"
    },
-   "nextDividendSource": "證交所配息清單",
+   "nextDividend": null,
+   "nextDividendSource": null,
    "nextDividendCarriedOver": false,
    "frequency": "月配",
    "frequencyBasis": "官方收益分配條款",
    "paymentsPerYear": 12,
    "annualizedYield": 9.463722397476342,
-   "yieldBasis": "下次已公告配息",
+   "yieldBasis": "最近一次配息",
    "aumBillionTwd": 16,
    "hasIncomeEqualization": true,
    "equalizationBasis": "官方收益分配條款",
@@ -827,19 +800,16 @@
    "closeDate": "2026-11-16",
    "latestDividend": {
     "amount": 0.2,
-    "exDate": "2026-10-19"
-   },
-   "nextDividend": {
-    "amount": 0.2,
     "exDate": "2026-11-17"
    },
-   "nextDividendSource": "證交所配息清單",
+   "nextDividend": null,
+   "nextDividendSource": null,
    "nextDividendCarriedOver": false,
    "frequency": "月配",
    "frequencyBasis": "官方收益分配條款",
    "paymentsPerYear": 12,
    "annualizedYield": 17.49271137026239,
-   "yieldBasis": "下次已公告配息",
+   "yieldBasis": "最近一次配息",
    "aumBillionTwd": 14,
    "hasIncomeEqualization": true,
    "equalizationBasis": "官方收益分配條款",
